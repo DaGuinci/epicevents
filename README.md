@@ -1,2 +1,194 @@
 # epicevents
-Openclassrooms study project - p12
+Openclassrooms study project - P12
+
+## Table of contents <!-- omit in toc -->
+
+- [1. Todo](#1-todo)
+  - [1.1. Preproject](#11-preproject)
+  - [1.2. Etape 1: Env SQL/Python](#12-etape-1-env-sqlpython)
+  - [1.3. Etape 2: Models/dal](#13-etape-2-modelsdal)
+  - [1.4. Etape 3: User account](#14-etape-3-user-account)
+  - [1.5. Etape 4: Authentification/autorisation](#15-etape-4-authentificationautorisation)
+  - [1.6. Etape 5: Data reading](#16-etape-5-data-reading)
+  - [1.7. Etape 6: Data creating/updating](#17-etape-6-data-creatingupdating)
+  - [1.8. Etape 7: CLI Interface](#18-etape-7-cli-interface)
+  - [1.9. Etape 8: Logging](#19-etape-8-logging)
+  - [1.10. Etape 9: Write documentation](#110-etape-9-write-documentation)
+- [2. Brief](#2-brief)
+  - [2.1. Class](#21-class)
+  - [2.2. Permissions](#22-permissions)
+
+### 1. Todo
+
+#### 1.1. Preproject
+- [x] Brief
+- [ ] Class diagram
+- [ ] Cours CRM
+- [ ] Cours sql
+
+#### 1.2. Etape 1: Env SQL/Python
+- [ ] Setup DB
+  - [ ] Formation PostgreSQL
+  - [ ] Install PGadmin
+  - [ ] Db creation
+  - [ ] SQL Alchemy
+
+#### 1.3. Etape 2: Models/dal
+
+- [ ] Setup MVC
+- [ ] DAO
+- [ ] Secure SQL
+
+#### 1.4. Etape 3: User account
+
+- [ ] Password managing (bcrypt, argon2)
+- [ ] Permissions
+
+#### 1.5. Etape 4: Authentification/autorisation
+
+- [ ] JWT
+
+#### 1.6. Etape 5: Data reading
+
+- [ ] Getters
+  
+#### 1.7. Etape 6: Data creating/updating
+
+- [ ] Code DAO
+- [ ] Validation by controlers
+- [ ] Security
+  - [ ] Injection SQL
+
+#### 1.8. Etape 7: CLI Interface
+
+-[ ] Choose library: click, rich
+
+#### 1.9. Etape 8: Logging
+
+- [ ] Sentry pour exceptions et erreurs produites
+  - [ ] Caught exceptions
+  - [ ] user creation/upudate
+  - [ ] signing contract
+
+#### 1.10. Etape 9: Write documentation
+
+### 2. Brief
+
+* Départements:
+  * commercial
+    * Cree/update profil client
+  * support
+    * Responsable org evenement
+  * gestion
+    * Cree contrat/associe contrat-client
+
+#### 2.1. Class
+
+<!--
+```plantuml
+@startuml
+skinparam backgroundColor #123749
+skinparam roundcorner 20
+skinparam classfontcolor lemon chiffon
+skinparam titlefontcolor linen
+skinparam arrowfontcolor linen
+skinparam attributefontcolor linen
+
+skinparam class {
+BackgroundColor #123749
+ArrowColor #EEB258
+BorderColor #EEB258
+AttributeFontColor linen
+}
+title Class diagram
+class Client {
+  - id: int
+  - name: str
+  - email: str
+  - phone: str
+  - company: str
+  - date_created: str
+  - date_updated: str
+  - epic_contact: str
+  + method1(): ReturnType
+}
+
+class Contract {
+  - id: uuid
+  - client_info: foreignkey
+  - epic_contact: foreignkey
+  - total_amount: float
+  - due_amount: float
+  - date_created: str
+  - signed_status: bool
+  + method1(): ReturnType
+}
+
+class Event {
+  - id: uuid
+  - contract_id: uuid
+  - client: foreignStr
+  - cient_contact: foreignDict
+  - date_start: str
+  - date_end: str
+  - epic_contact: foreignStr
+  - location: str
+  - attendees: str
+  - notes: str
+  + method1(): ReturnType
+}
+
+class User {
+  - id: uuid
+  - name: str
+  - email: str
+  - password: hashed_str
+  - role: str
+  - permissions: foreignkey
+  + method1(): ReturnType
+}
+Client -- Contract
+@enduml
+```
+-->
+![Alt text](README.svg)
+<!--
+' MyClass "1" -- "*" MyAssociatedObject -->
+  
+#### 2.2. Permissions
+
+<!-- class Permissions{
+  - name: str
+  - can_read_contract: bool
+  - can_create_contract: bool
+  - can_update_contract: bool
+  - can_delete_contract: bool
+  - can_read_client: bool
+  - can_create_client: bool
+  - can_update_client: bool
+  - can_delete_client: bool
+  - can_read_event: bool
+  - can_create_event: bool
+  - can_update_event: bool
+  - can_update_event_client: bool
+  - can_delete_event: bool -->
+  
+* Tous
+  * Acces lecture a toutes ressources
+
+* Gestion
+  * CRUD user
+  * CRU contract
+  * Acces events par filtre
+  * Update event (associer un user support)
+
+* Commercial
+  * creer clients
+  * modifier clients propres
+  * modifier contrats clients propres
+  * acces contrat par filtre
+  * créer evenement pour client contrat signé
+  
+* Support
+  * acces events par filtre
+  * update events propres
