@@ -15,8 +15,10 @@ Openclassrooms study project - P12
   - [1.9. Etape 8: Logging](#19-etape-8-logging)
   - [1.10. Etape 9: Write documentation](#110-etape-9-write-documentation)
 - [2. Brief](#2-brief)
-  - [2.1. Class](#21-class)
-  - [2.2. Permissions](#22-permissions)
+  - [2.1. Class diagram](#21-class-diagram)
+  - [2.2. DB model](#22-db-model)
+  - [2.3. Permissions](#23-permissions)
+- [3. Upgrade suggestions](#3-upgrade-suggestions)
 
 ### 1. Todo
 
@@ -82,9 +84,10 @@ Openclassrooms study project - P12
   * gestion
     * Cree contrat/associe contrat-client
 
-#### 2.1. Class
+#### 2.1. Class diagram
 
-<!--
+<!-
+
 ```plantuml
 @startuml
 skinparam backgroundColor #123749
@@ -101,61 +104,92 @@ BorderColor #EEB258
 AttributeFontColor linen
 }
 title Class diagram
-class Client {
-  - id: int
-  - name: str
-  - email: str
-  - phone: str
-  - company: str
-  - date_created: str
-  - date_updated: str
-  - epic_contact: str
-  + method1(): ReturnType
+
+  class User {
+    - id: uuid
+    - name: str
+    - email: str
+    - password: hashed_str
+    - role: str
+    - permissions: Permissions
+    + getContracts(): list
+    + getEvents(): list
+    + getUsers(): list
+  }
+
+  class Commercial extends User {
+    + createClient()
+    + updateClient(Client)
+    + createEvent()
+    + updateContract(Contract)
+  }
+
+  class Manager extends User {
+    + createUser()
+    + updateUser(User)
+    + deleteUser(User)
+    + createContract()
+    + updateContract(Contract)
+    + assignSupportToEvent(Event, Support)
+  }
+
+  class Support extends User {
+    + updateEvent(event)
+  }
+
+together {
+  class Event {
+    - id: int
+    - contract_id: int
+    - client_info: dict
+    - date_start: str
+    - date_end: str
+    - epic_contact: Support
+    - location: str
+    - attendees: str
+    - notes: str
+    + method1(): ReturnType
+  }
+
+  class Contract {
+    - id: int
+    - client: Client
+    - epic_contact: Commercial
+    - total_amount: float
+    - due_amount: float
+    - date_created: str
+    - signed_status: bool
+    + get_client_infos(self.Client): dict
+  }
+
+  class Client {
+    - id: int
+    - name: str
+    - email: str
+    - phone: str
+    - company: str
+    - date_created: str
+    - date_updated: str
+    - epic_contact: Commercial
+  }
 }
 
-class Contract {
-  - id: uuid
-  - client_info: foreignkey
-  - epic_contact: foreignkey
-  - total_amount: float
-  - due_amount: float
-  - date_created: str
-  - signed_status: bool
-  + method1(): ReturnType
-}
+Commercial "1" -down- "0..*" Client
+Support "1" -- "0..*" Event
+Commercial "1" -down- "0..*" Contract
+Client "1" -right- "0..*" Contract
+Contract "1" -right- "1" Event
 
-class Event {
-  - id: uuid
-  - contract_id: uuid
-  - client: foreignStr
-  - cient_contact: foreignDict
-  - date_start: str
-  - date_end: str
-  - epic_contact: foreignStr
-  - location: str
-  - attendees: str
-  - notes: str
-  + method1(): ReturnType
-}
-
-class User {
-  - id: uuid
-  - name: str
-  - email: str
-  - password: hashed_str
-  - role: str
-  - permissions: foreignkey
-  + method1(): ReturnType
-}
-Client -- Contract
 @enduml
 ```
 -->
 ![Alt text](README.svg)
 <!--
 ' MyClass "1" -- "*" MyAssociatedObject -->
-  
-#### 2.2. Permissions
+#### 2.2. DB model
+
+
+#### 2.3. Permissions
 
 <!-- class Permissions{
   - name: str
@@ -192,3 +226,7 @@ Client -- Contract
 * Support
   * acces events par filtre
   * update events propres
+
+### 3. Upgrade suggestions
+
+  - Add a companies table to retrieve clients from same company
