@@ -24,16 +24,17 @@ Openclassrooms study project - P12
 
 #### 1.1. Preproject
 - [x] Brief
-- [ ] Class diagram
-- [ ] Cours CRM
-- [ ] Cours sql
+- [x] Class diagram
+- [x] Cours CRM
+- [x] Cours sql
 
 #### 1.2. Etape 1: Env SQL/Python
 - [ ] Setup DB
-  - [ ] Formation PostgreSQL
-  - [ ] Install PGadmin
-  - [ ] Db creation
-  - [ ] SQL Alchemy
+  - [x] Formation PostgreSQL
+  - [x] Formation SQLAlchemy
+  - [x] Install PGadmin
+  - [x] DB creation
+  - [ ] SQLAlchemy
 
 #### 1.3. Etape 2: Models/dal
 
@@ -86,7 +87,7 @@ Openclassrooms study project - P12
 
 #### 2.1. Class diagram
 
-<!-
+<!--
 
 ```plantuml
 @startuml
@@ -188,6 +189,7 @@ Contract "1" -right- "1" Event
 ' MyClass "1" -- "*" MyAssociatedObject -->
 #### 2.2. DB model
 
+![Alt text](ERD.svg)
 
 #### 2.3. Permissions
 

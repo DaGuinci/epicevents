@@ -13,4 +13,8 @@ env.bak/
 venv.bak/
 
 # Preproject tools
-.drawio
+erd/
+*.drawio
+
+# Configuration file
+config.json
