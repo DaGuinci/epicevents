@@ -1,4 +1,4 @@
-# epicevents
+# Epic Events
 Openclassrooms study project - P12
 
 ## Table of contents <!-- omit in toc -->
@@ -19,6 +19,10 @@ Openclassrooms study project - P12
   - [2.2. DB model](#22-db-model)
   - [2.3. Permissions](#23-permissions)
 - [3. Upgrade suggestions](#3-upgrade-suggestions)
+- [4. Documentation in progress](#4-documentation-in-progress)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
+  - [Execution](#execution)
 
 ### 1. Todo
 
@@ -34,12 +38,12 @@ Openclassrooms study project - P12
   - [x] Formation SQLAlchemy
   - [x] Install PGadmin
   - [x] DB creation
-  - [ ] SQLAlchemy
+  - [x] SQLAlchemy
 
 #### 1.3. Etape 2: Models/dal
 
-- [ ] Setup MVC
-- [ ] DAO
+- [x] Setup MVC
+- [x] DAO
 - [ ] Secure SQL
 
 #### 1.4. Etape 3: User account
@@ -74,6 +78,8 @@ Openclassrooms study project - P12
   - [ ] signing contract
 
 #### 1.10. Etape 9: Write documentation
+
+  - [ ] Set datatable creation script
 
 ### 2. Brief
 
@@ -192,22 +198,6 @@ Contract "1" -right- "1" Event
 ![Alt text](ERD.svg)
 
 #### 2.3. Permissions
-
-<!-- class Permissions{
-  - name: str
-  - can_read_contract: bool
-  - can_create_contract: bool
-  - can_update_contract: bool
-  - can_delete_contract: bool
-  - can_read_client: bool
-  - can_create_client: bool
-  - can_update_client: bool
-  - can_delete_client: bool
-  - can_read_event: bool
-  - can_create_event: bool
-  - can_update_event: bool
-  - can_update_event_client: bool
-  - can_delete_event: bool -->
   
 * Tous
   * Acces lecture a toutes ressources
@@ -232,3 +222,34 @@ Contract "1" -right- "1" Event
 ### 3. Upgrade suggestions
 
   - Add a companies table to retrieve clients from same company
+
+### 4. Documentation in progress
+
+#### Installation
+
+* Clone project
+  ```bash
+  git clone https://github.com/DaGuinci/epicevents.git
+  ```
+* Install dependencies
+  ```bash
+  pipenv install
+  ```
+
+* Activate environment
+  ```bash
+  pipenv shell
+  ```
+
+#### Configuration
+
+* Get a correct config.json
+
+
+#### Execution
+
+* Launch the application
+  
+    ```bash
+    python main.py
+    ```

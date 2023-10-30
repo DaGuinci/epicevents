@@ -11,15 +11,16 @@ from models.eventModel import Event
 
 class DataController():
 
-    url = URL.create(
-        drivername="postgresql",
-        username="epic_user",
-        password="epicpass",
-        host="localhost",
-        database="epiceventsdb"
-    )
+    def __init__(self, credentials):
 
-    engine = create_engine(url, echo=True)
+        url = URL.create(
+            drivername="postgresql",
+            username=credentials['db_user'],
+            password=credentials['db_pass'],
+            host="localhost",
+            database="epiceventsdb"
+        )
+        self.engine = create_engine(url, echo=True)
 
     def read_datas(self):
         with Session(self.engine) as session:
