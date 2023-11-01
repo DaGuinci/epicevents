@@ -45,6 +45,7 @@ Openclassrooms study project - P12
 - [x] Setup MVC
 - [x] DAO
 - [ ] Secure SQL
+- [ ] Add unique constraint for user name/email
 
 #### 1.4. Etape 3: User account
 
