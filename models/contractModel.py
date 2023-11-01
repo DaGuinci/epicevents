@@ -2,7 +2,7 @@ from models.base import Base
 
 import datetime
 
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import relationship
 
 from sqlalchemy import (
     Column,
@@ -12,8 +12,6 @@ from sqlalchemy import (
     Date,
     Boolean
     )
-
-# Base = declarative_base()
 
 
 class Contract(Base):
@@ -26,5 +24,9 @@ class Contract(Base):
     signed = Column(Boolean, default=False)
     date_created = Column(Date, default=datetime.datetime.now)
 
+    events = relationship("Event", cascade="all, delete")
+
     def __repr__(self):
         return f'Contract {self.contract_id}'
+
+

@@ -1,7 +1,5 @@
 from models.base import Base
 
-from sqlalchemy.orm import declarative_base
-
 from sqlalchemy import (
     Column,
     Integer,
@@ -10,8 +8,6 @@ from sqlalchemy import (
     Date,
     Text
     )
-
-# Base = declarative_base()
 
 
 class Event(Base):

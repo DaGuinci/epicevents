@@ -4,18 +4,16 @@ from models.base import Base
 
 import datetime
 
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import relationship
 
 from sqlalchemy import (
     Column,
     Integer,
     String,
     ForeignKey,
-    Date
+    Date,
+    UniqueConstraint
     )
-
-
-# Base = declarative_base()
 
 
 class Client(Base):
@@ -29,6 +27,15 @@ class Client(Base):
     company = Column(String(50), nullable=False)
     date_created = Column(Date, default=datetime.datetime.now)
     date_updated = Column(Date, onupdate=datetime.datetime.now)
+
+    contracts = relationship("Contract", cascade="all, delete")
+
+
+    __table_args__ = (UniqueConstraint(
+        "name",
+        "email",
+        name="client_allready_exists"
+        ),)
 
     def __repr__(self):
         return f'Client {self.name}'
