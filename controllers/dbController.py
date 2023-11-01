@@ -22,13 +22,27 @@ class DataController():
         )
         self.engine = create_engine(url, echo=True)
 
+    def  create_user(self, args):
+        with Session(self.engine) as session:
+            # first_user = User(
+            #     name='first_user',
+            #     email='first@user.com',
+            #     password='firstpass',
+            #     role='MAN'
+            # )
+            # session.add(first_user)
+
+            # session.commit()
+            pass
+
+
     def read_datas(self):
         with Session(self.engine) as session:
             stmt = select(User).where(User.name.in_(["first_user"]))
 
             for user in session.scalars(stmt):
-                print(user)
-
+                # print(user)
+                pass
             # first_user = User(
             #     name='first_user',
             #     email='first@user.com',
