@@ -229,9 +229,11 @@ Contract "1" -right- "1" Event
 #### Installation
 
 * Clone project
+  
   ```bash
   git clone https://github.com/DaGuinci/epicevents.git
   ```
+  
 * Install dependencies
   ```bash
   pipenv install
@@ -244,8 +246,35 @@ Contract "1" -right- "1" Event
 
 #### Configuration
 
-* Get a correct config.json
+* Create a database and fill the config.json with correct informations:   
+*To use pytest, create a second database, but this is optionnal to run the application*
+  
+  ```json
+  {
+    "db_config":{
+      "db_name":"your_database",
+      "db_user":"your_user",
+      "db_pass":"your_pass"
+    },
+    "test_db_config":{
+      "db_name":"your_test_database",
+      "db_user":"your_user",
+      "db_pass":"your_pass"
+    },
+  }
+  ```
+  
+  
+* To create tables it is possible to use:
+  
+  ```bash
+    python db_tables_setup.py
+  ```
 
+  *to use a test database, change db_create.py, line 116, with*
+  ```python
+  credentials = config['test_db_config']
+  ```
 
 #### Execution
 

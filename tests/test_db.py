@@ -7,26 +7,33 @@ from sqlalchemy.engine import URL
 from sqlalchemy import select
 
 from models.userModel import User
-
-f = open('config.json')
-credentials = json.load(f)
-f.close()
-
-url = URL.create(
-    drivername="postgresql",
-    username=credentials['db_user'],
-    password=credentials['db_pass'],
-    host="localhost",
-    database="epiceventsdb"
-)
-# global application scope.  create Session class, engine
-Session = sessionmaker()
-
-engine = create_engine(url)
+from models.clientModel import Client
+from models.contractModel import Contract
+from models.eventModel import Event
 
 
-class SomeTest(TestCase):
+class TempDatabaseTest(TestCase):
+
+    # get the local database credentials
+    f = open('config.json')
+    credentials = json.load(f)
+    f.close()
+
     def setUp(self):
+
+        # make url
+        url = URL.create(
+            drivername="postgresql",
+            username=self.credentials['db_user'],
+            password=self.credentials['db_pass'],
+            host="localhost",
+            database="epiceventsdb"
+        )
+
+        # global application scope.  create Session class, engine
+        Session = sessionmaker()
+
+        engine = create_engine(url)
         # connect to the database
         self.connection = engine.connect()
 
@@ -43,15 +50,24 @@ class SomeTest(TestCase):
         stmt = select(User)
 
         for user in self.session.scalars(stmt):
-            # print(user)
+            print('************')
+            print(user)
             pass
 
-    # def test_something(self):
-    #     # use the session in tests.
-
-    #     # self.session.add(Foo())
-    #     # self.session.commit()
-    #     pass
+    def test_something(self):
+        # use the session in tests.
+        user_test = User(
+            name='test_user_3',
+            email='test@user.com',
+            password='testpass',
+            role='MAN'
+        )
+        self.session.add(user_test)
+        self.session.commit()
+        users = self.session.query(User).all()
+        print('--------------------')
+        print(users)
+        # pass
 
     def test_something_with_rollbacks(self):
         user_test = User(

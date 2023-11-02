@@ -17,22 +17,26 @@ class DataController():
             username=credentials['db_user'],
             password=credentials['db_pass'],
             host="localhost",
-            database="epiceventsdb"
+            database=credentials['db_name']
         )
         self.engine = create_engine(url, echo=False)
 
     # Users
     def create_user(self, args):
         with Session(self.engine) as session:
-            new_user = User(
-                name=args['name'],
-                email=args['email'],
-                password=args['password'],
-                role=args['role']
-            )
-            session.add(new_user)
-            session.commit()
-        return True
+            user = session.query(User).filter(User.name == args['name']).first()
+            if user:
+                return ('Cet utilisateur existe déjà.')
+            else:
+                new_user = User(
+                    name=args['name'],
+                    email=args['email'],
+                    password=args['password'],
+                    role=args['role']
+                )
+                session.add(new_user)
+                session.commit()
+                return True
 
     def get_users(self):
         with Session(self.engine) as session:

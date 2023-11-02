@@ -30,7 +30,6 @@ class Client(Base):
 
     contracts = relationship("Contract", cascade="all, delete")
 
-
     __table_args__ = (UniqueConstraint(
         "name",
         "email",
