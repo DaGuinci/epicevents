@@ -14,10 +14,11 @@ from models.eventModel import Event
 
 class TempDatabaseTest(TestCase):
 
-    # get the local database credentials
+    # get the local test database credentials
     f = open('config.json')
-    credentials = json.load(f)
+    config = json.load(f)
     f.close()
+    credentials = config['test_db_config']
 
     def setUp(self):
 
@@ -27,70 +28,46 @@ class TempDatabaseTest(TestCase):
             username=self.credentials['db_user'],
             password=self.credentials['db_pass'],
             host="localhost",
-            database="epiceventsdb"
+            database=self.credentials['db_name']
         )
 
-        # global application scope.  create Session class, engine
         Session = sessionmaker()
 
         engine = create_engine(url)
-        # connect to the database
+
         self.connection = engine.connect()
 
-        # begin a non-ORM transaction
-        self.trans = self.connection.begin()
-
-        # bind an individual Session to the connection, selecting
-        # "create_savepoint" join_transaction_mode
         self.session = Session(
             bind=self.connection, join_transaction_mode="create_savepoint"
         )
 
-    def select_users(self):
-        stmt = select(User)
+    def clean_db(self):
 
-        for user in self.session.scalars(stmt):
-            print('************')
-            print(user)
-            pass
+        # Delete all events
+        events = self.session.query(Event).all()
+        for event in events:
+            self.session.delete(event)
 
-    def test_something(self):
-        # use the session in tests.
-        user_test = User(
-            name='test_user_3',
-            email='test@user.com',
-            password='testpass',
-            role='MAN'
-        )
-        self.session.add(user_test)
-        self.session.commit()
+        # Delete all contracts
+        contracts = self.session.query(Contract).all()
+        for contract in contracts:
+            self.session.delete(contract)
+
+        # Delete all clients
+        clients = self.session.query(Client).all()
+        for client in clients:
+            self.session.delete(client)
+
+        # Delete all users
         users = self.session.query(User).all()
-        print('--------------------')
-        print(users)
-        # pass
-
-    def test_something_with_rollbacks(self):
-        user_test = User(
-            name='test_user',
-            email='test@user.com',
-            password='testpass',
-            role='MAN'
-        )
-        self.session.add(user_test)
-        self.select_users()
-        self.session.flush()
-        self.session.rollback()
-
-        # self.session.add(Foo())
+        for user in users:
+            self.session.delete(user)
         self.session.commit()
 
     def tearDown(self):
+
+        self.clean_db()
+
         self.session.close()
-
-        # rollback - everything that happened with the
-        # Session above (including calls to commit())
-        # is rolled back.
-        self.trans.rollback()
-
         # return connection to the Engine
         self.connection.close()

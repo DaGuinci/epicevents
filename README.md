@@ -263,12 +263,17 @@ Contract "1" -right- "1" Event
     },
   }
   ```
+
+* After this, to prevent git to commit your local informations:
   
+  ```bash
+  git update-index --skip-worktree config.json
+  ```
   
 * To create tables it is possible to use:
   
   ```bash
-    python db_tables_setup.py
+  python db_tables_setup.py
   ```
 
   *to use a test database, change db_create.py, line 116, with*

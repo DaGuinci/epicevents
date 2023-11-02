@@ -6,8 +6,8 @@ from models.userModel import User
 
 
 class UserControllerTest(TempDatabaseTest):
+
     def test_user_creation(self):
-        self.setUp()
         controller = DataController(self.credentials)
 
         """
@@ -20,11 +20,18 @@ class UserControllerTest(TempDatabaseTest):
             'password': 'benjpass',
             'role': 'MAN'
         }
-        controller.create_user(args)
+        assert controller.create_user(args) is True
 
-        response = self.session.query(User).filter(User.name == 'Benjamin Franklin').first()
-        print('&&&&&&&&&&&&&&&&&')
-        print(response)
-        self.session.flush()
-        self.session.rollback()
-        self.tearDown()
+        # response = self.session.query(User).filter(User.name == 'Benjamin ranklin').first()
+        assert (self.session.query(User).filter(
+            User.name == 'Benjamin Franklin'
+            ).first()
+            is not
+            None
+            )
+
+        """
+        When creating a user with same name and email
+        Then an error message is returned
+        """
+        assert controller.create_user(args) == 'Cet utilisateur existe déjà.'
