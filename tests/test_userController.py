@@ -1,4 +1,4 @@
-from test_db import TempDatabaseTest
+from tests.test_setup import TempDatabaseTest
 
 from controllers.dbController import DataController
 
@@ -20,7 +20,7 @@ class UserControllerTest(TempDatabaseTest):
             'password': 'benjpass',
             'role': 'MAN'
         }
-        assert controller.create_user(args) is True
+        assert controller.save_user(args) is True
 
         # response = self.session.query(User).filter(User.name == 'Benjamin ranklin').first()
         assert (self.session.query(User).filter(
@@ -34,4 +34,4 @@ class UserControllerTest(TempDatabaseTest):
         When creating a user with same name and email
         Then an error message is returned
         """
-        assert controller.create_user(args) == 'Cet utilisateur existe déjà.'
+        assert controller.save_user(args) == 'Cet utilisateur existe déjà.'

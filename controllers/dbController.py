@@ -20,23 +20,19 @@ class DataController():
             database=credentials['db_name']
         )
         self.engine = create_engine(url, echo=False)
+        self.session = Session(self.engine)
 
     # Users
-    def create_user(self, args):
-        with Session(self.engine) as session:
-            user = session.query(User).filter(User.name == args['name']).first()
-            if user:
-                return ('Cet utilisateur existe déjà.')
-            else:
-                new_user = User(
-                    name=args['name'],
-                    email=args['email'],
-                    password=args['password'],
-                    role=args['role']
-                )
-                session.add(new_user)
-                session.commit()
-                return True
+    def save_user(self, args):
+        # hash password
+        new_user = User(
+            name=args['name'],
+            email=args['email'],
+            password=args['password'],
+            role=args['role']
+        )
+        self.session.add(new_user)
+        return self.session.commit()
 
     def get_users(self):
         with Session(self.engine) as session:

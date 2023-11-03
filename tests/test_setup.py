@@ -4,7 +4,6 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from unittest import TestCase
 from sqlalchemy.engine import URL
-from sqlalchemy import select
 
 from models.userModel import User
 from models.clientModel import Client
@@ -40,6 +39,35 @@ class TempDatabaseTest(TestCase):
         self.session = Session(
             bind=self.connection, join_transaction_mode="create_savepoint"
         )
+        self.fill_db()
+
+    def fill_db(self):
+        manager = User(
+            name='Michael Scott',
+            password='michaelpass',
+            email='michael@dundermifflin.com',
+            role='MAN'
+
+        )
+        self.session.add(manager)
+        salesman = User(
+            name='Jim Halpert',
+            password='jimpass',
+            email='jim@dundermifflin.com',
+            role='COM'
+        )
+
+        self.session.add(salesman)
+        support = User(
+            name='Darryl Philbin',
+            password='darrylpass',
+            email='darryl@dundermifflin.com',
+            role='SUP'
+
+        )
+        self.session.add(support)
+
+        self.session.commit()
 
     def clean_db(self):
 

@@ -36,7 +36,7 @@ class User(Base):
     user_id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
     email = Column(String(50), nullable=False)
-    password = Column(String(120), nullable=False)
+    password = Column(Text, nullable=False)
     role = Column(Enum(department), nullable=False)
 
     clients = relationship("Client", cascade="all, delete")
@@ -114,7 +114,7 @@ f = open('config.json')
 config = json.load(f)
 f.close()
 
-credentials = config['db_config']
+credentials = config['test_db_config']
 
 url = URL.create(
     drivername="postgresql",

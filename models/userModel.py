@@ -9,6 +9,7 @@ from sqlalchemy import (
     Integer,
     String,
     Enum,
+    Text,
     UniqueConstraint
     )
 
@@ -19,14 +20,13 @@ class department(IntEnum):
     SUP = 3  # Support
 
 
-
 class User(Base):
     __tablename__ = 'user'
 
     user_id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
     email = Column(String(50), nullable=False)
-    password = Column(String(120), nullable=False)
+    password = Column(Text, nullable=False)
     role = Column(Enum(department), nullable=False)
 
     clients = relationship("Client", cascade="all, delete")

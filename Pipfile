@@ -7,6 +7,8 @@ name = "pypi"
 sqlalchemy = "*"
 psycopg2-binary = "*"
 pytest = "*"
+passlib = "*"
+argon2-cffi = "*"
 
 [dev-packages]
 
