@@ -17,4 +17,4 @@ erd/
 *.drawio
 
 # Configuration file
-# config.json
+config.json
