@@ -37,5 +37,10 @@ class User(Base):
         name="user_allready_exists"
         ),)
 
+    # def __init__(self):
+    #     match self.role:
+    #         case 'MAN':
+    #             self.permissions =
+
     def __repr__(self):
         return f'User {self.name}'

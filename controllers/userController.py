@@ -16,14 +16,14 @@ class UserController():
             filter(User.name == log_infos['username']).first()
             )
         if not user:
-            return 'L\'utilisateur n\'existe pas.'
+            return 'bad_username'
         else:
             # unsalt password
             hashed_stored = user.password[:-22]
             if argon2.verify(log_infos['password'], hashed_stored):
-                return 'Utilisateur connecté.'
+                return (True, user)
             else:
-                return 'Connection echouée.'
+                return 'bad_credentials'
 
     def create_user(self, args):
         user = (
@@ -36,7 +36,13 @@ class UserController():
             hashed = argon2.hash(args['password'])
             # generate the salt\
             salt = secrets.token_urlsafe(16)
-            print(salt)
             # replace args password
-            args['password'] = hashed + salt
-            return self.db_controller.save_user(args)
+            password = hashed + salt
+            new_user = User(
+                name=args['name'],
+                email=args['email'],
+                password=password,
+                role=args['role']
+            )
+            self.session.add(new_user)
+            return self.session.commit()

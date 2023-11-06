@@ -23,16 +23,16 @@ class DataController():
         self.session = Session(self.engine)
 
     # Users
-    def save_user(self, args):
-        # hash password
-        new_user = User(
-            name=args['name'],
-            email=args['email'],
-            password=args['password'],
-            role=args['role']
-        )
-        self.session.add(new_user)
-        return self.session.commit()
+    # def save_user(self, args):
+    #     # hash password
+    #     new_user = User(
+    #         name=args['name'],
+    #         email=args['email'],
+    #         password=args['password'],
+    #         role=args['role']
+    #     )
+    #     self.session.add(new_user)
+    #     return self.session.commit()
 
     def get_users(self):
         with Session(self.engine) as session:
