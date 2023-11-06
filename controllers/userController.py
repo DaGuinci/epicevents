@@ -16,21 +16,33 @@ class UserController():
             filter(User.name == log_infos['username']).first()
             )
         if not user:
-            return 'bad_username'
+            return {
+                'status': False,
+                'error': 'bad_username'
+                }
         else:
             # unsalt password
             hashed_stored = user.password[:-22]
             if argon2.verify(log_infos['password'], hashed_stored):
-                return (True, user)
+                return {
+                'status': True,
+                'user': user
+                }
             else:
-                return 'bad_credentials'
+                return {
+                'status': False,
+                'error': 'bad_credentials'
+                }
 
     def create_user(self, args):
         user = (
             self.session.query(User).filter(User.name == args['name']).first()
             )
         if user:
-            return ('Cet utilisateur existe déjà.')
+            return {
+                'status': False,
+                "error": 'existing_user'
+                }
         else:
             # hash plaintext password
             hashed = argon2.hash(args['password'])
@@ -45,4 +57,14 @@ class UserController():
                 role=args['role']
             )
             self.session.add(new_user)
-            return self.session.commit()
+            self.session.commit()
+            user = (
+                self.session.query(User).
+                filter(User.name == args['name']).
+                first()
+                )
+            if user:
+                return {
+                    'status': True,
+                    'user': user
+                    }

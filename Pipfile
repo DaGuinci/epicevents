@@ -10,6 +10,7 @@ pytest = "*"
 passlib = "*"
 argon2-cffi = "*"
 alembic = "*"
+simple-term-menu = "*"
 
 [dev-packages]
 

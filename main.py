@@ -15,13 +15,13 @@ _user = None
 
 main_controller = MainController(db_credentials)
 
-# user = main_controller.user_controller.create_user({
-#     'name': 'first_user3',
-#     'email': 'first@user.com',
-#     'password': 'userpass',
-#     'role': 'SUP'
-#     }
-# )
+user = main_controller.user_controller.create_user({
+    'name': 'manager',
+    'email': 'manage@user.com',
+    'password': 'userpass',
+    'role': 'MAN'
+    }
+)
 # print(user)
 
 # LIST ALL USERS
