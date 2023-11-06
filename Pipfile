@@ -9,6 +9,7 @@ psycopg2-binary = "*"
 pytest = "*"
 passlib = "*"
 argon2-cffi = "*"
+alembic = "*"
 
 [dev-packages]
 

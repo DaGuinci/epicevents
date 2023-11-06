@@ -24,10 +24,10 @@ from sqlalchemy import (
 Base = declarative_base()
 
 
-class department(IntEnum):
-    COM = 1  # Commercial
-    MAN = 2  # Management
-    SUP = 3  # Support
+# class department(IntEnum):
+#     COM = 1  # Commercial
+#     MAN = 2  # Management
+#     SUP = 3  # Support
 
 
 class User(Base):
@@ -37,7 +37,7 @@ class User(Base):
     name = Column(String(50), nullable=False)
     email = Column(String(50), nullable=False)
     password = Column(Text, nullable=False)
-    role = Column(Enum(department), nullable=False)
+    role = Column(String(3), nullable=False)
 
     clients = relationship("Client", cascade="all, delete")
 
@@ -114,7 +114,7 @@ f = open('config.json')
 config = json.load(f)
 f.close()
 
-credentials = config['test_db_config']
+credentials = config['db_config']
 
 url = URL.create(
     drivername="postgresql",

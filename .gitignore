@@ -18,3 +18,7 @@ erd/
 
 # Configuration file
 config.json
+
+# alembic stuff
+alembic.ini
+alembic/

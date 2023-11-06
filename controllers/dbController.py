@@ -19,6 +19,7 @@ class DataController():
             host="localhost",
             database=credentials['db_name']
         )
+        print(url)
         self.engine = create_engine(url, echo=False)
         self.session = Session(self.engine)
 
