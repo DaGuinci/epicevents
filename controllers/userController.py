@@ -127,3 +127,10 @@ class UserController():
 
     def get_users(self):
         return (self.session.query(User).order_by(User.name))
+
+    def delete_user(self, user):
+        self.session.delete(user)
+        self.session.commit()
+        return {
+            'status': True,
+            }

@@ -171,3 +171,26 @@ class FormView:
             'key': key,
             'value': new_value
         }
+
+    def confirm_user_delete(self, user):
+        title = (
+            'Souhaitez-vous réellement supprimer le collaborateur ' +
+            user.name
+            )
+        options = [
+            'Confirmer',
+            'Revenir en arrière',
+        ]
+        term_menu = TerminalMenu(
+            options,
+            menu_highlight_style=('standout', 'bg_purple'),
+            clear_menu_on_exit=False,
+            quit_keys=(),
+            title=title
+            )
+        tools.clear_term()
+        match term_menu.show():
+            case 0:
+                return True
+            case 1:
+                return False

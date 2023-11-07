@@ -22,6 +22,10 @@ class ReturnView:
                 tools.clear_term()
                 print('\nCet utilisateur existe déjà.\n')
                 tools.prompt_ok()
+            case 'self_deleting':
+                tools.clear_term()
+                print('\nVous ne pouvez pas vous supprimer vous-même.\n')
+                tools.prompt_ok()
             case _:
                 print('Une erreur est survenue.')
 
@@ -36,7 +40,10 @@ class ReturnView:
             case 'user_updated':
                 print('Le collaborateur ' + args['user'].name +
                       ' a bien été modifié.')
-        tools.prompt_ok()
+            case 'user_deleted':
+                print('Le collaborateur ' + args['user'] +
+                      ' a bien été supprimé.')
+        return tools.prompt_ok()
 
     def user_card(self, user):
         tools.clear_term()

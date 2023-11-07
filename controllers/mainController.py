@@ -46,13 +46,13 @@ class MainController():
                         'type': 'new_user_created',
                         'user': response['user']
                         })
-                    self.main_manager()
+                    return self.main_manager()
                 else:
                     self.return_view.error_msg(response['error'])
-                    self.main_manager()
+                    return self.main_manager()
             case 1:
                 # TODO proposer une demarche par dept/par recherche...
-                self.pick_user()
+                return self.pick_user()
             case 4:
                 exit()
 
@@ -64,21 +64,21 @@ class MainController():
         options.append('Revenir en arrière')
         response = self.forms_view.user_choice(options)
         if response == len(options)-1:
-            self.main_manager()
+            return self.main_manager()
         else:
             user = users[response]
-            self.user_actions(user)
+            return self.user_actions(user)
 
     def user_actions(self, user):
         self.return_view.user_card(user)
         response = self.forms_view.user_actions_menu()
         match response:
             case 0:
-                self.update_user_process(user)
+                return self.update_user_process(user)
             case 1:
-                self.delete_user_process(user)
+                return self.delete_user_process(user)
             case 2:
-                self.pick_user()
+                return self.pick_user()
 
     def update_user_process(self, user):
         response = self.forms_view.modify_user_menu(user)
@@ -95,13 +95,31 @@ class MainController():
                     'user': user
                     }
                 )
-            self.pick_user()
+            return self.pick_user()
         # if not, error msg
         else:
             self.return_view.error_msg(update_return['error'])
-            self.pick_user()
-        print(update_return)
-
+            return self.pick_user()
 
     def delete_user_process(self, user):
-        pass
+        username = user.name
+        if user == self.logged:
+            self.return_view.error_msg(
+                'self_deleting'
+            )
+            return self.pick_user()
+        response = self.forms_view.confirm_user_delete(user)
+        if response:
+            # TODO manage the case of user having clients, contracts...
+            delete_return = self.user_controller.delete_user(user)
+            if delete_return:
+                self.return_view.success_msg(
+                    {
+                        'type': 'user_deleted',
+                        'user': username
+                        }
+                    )
+                self.pick_user()
+        else:
+            self.pick_user()
+

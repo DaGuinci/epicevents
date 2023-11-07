@@ -58,15 +58,15 @@ class DataController():
             else:
                 return False
 
-    def delete_user(self, id):
-        with Session(self.engine) as session:
-            user = session.get(User, id)
-            if user:
-                session.delete(user)
-                session.commit()
-                return True
-            else:
-                return False
+    # def delete_user(self, id):
+    #     with Session(self.engine) as session:
+    #         user = session.get(User, id)
+    #         if user:
+    #             session.delete(user)
+    #             session.commit()
+    #             return True
+    #         else:
+    #             return False
 
     # Clients
     def create_client(self, args):
