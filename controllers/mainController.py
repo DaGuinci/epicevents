@@ -50,5 +50,58 @@ class MainController():
                 else:
                     self.return_view.error_msg(response['error'])
                     self.main_manager()
+            case 1:
+                # TODO proposer une demarche par dept/par recherche...
+                self.pick_user()
             case 4:
                 exit()
+
+    def pick_user(self):
+        users = self.user_controller.get_users()
+        options = []
+        for user in users:
+            options.append(user.name)
+        options.append('Revenir en arrière')
+        response = self.forms_view.user_choice(options)
+        if response == len(options)-1:
+            self.main_manager()
+        else:
+            user = users[response]
+            self.user_actions(user)
+
+    def user_actions(self, user):
+        self.return_view.user_card(user)
+        response = self.forms_view.user_actions_menu()
+        match response:
+            case 0:
+                self.update_user_process(user)
+            case 1:
+                self.delete_user_process(user)
+            case 2:
+                self.pick_user()
+
+    def update_user_process(self, user):
+        response = self.forms_view.modify_user_menu(user)
+        update_return = self.user_controller.update_user(
+            user,
+            response['key'],
+            response['value']
+            )
+        # if ok, success msg
+        if update_return['status']:
+            self.return_view.success_msg(
+                {
+                    'type': 'user_updated',
+                    'user': user
+                    }
+                )
+            self.pick_user()
+        # if not, error msg
+        else:
+            self.return_view.error_msg(update_return['error'])
+            self.pick_user()
+        print(update_return)
+
+
+    def delete_user_process(self, user):
+        pass

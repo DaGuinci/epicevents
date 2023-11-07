@@ -38,7 +38,7 @@ class UserController():
         user = (
             self.session.query(User).filter(User.name == args['name']).first()
             )
-        if user:
+        if user and user.email == args['email']:
             return {
                 'status': False,
                 "error": 'existing_user'
@@ -68,3 +68,62 @@ class UserController():
                     'status': True,
                     'user': user
                     }
+
+    def update_user(self, user, key, value):
+        match key:
+            case 'name':
+                username_exists = (
+                    self.session.query(User).
+                    filter(User.name == value).
+                    first()
+                    )
+                if username_exists and username_exists.email == user.email:
+                    return {
+                        'status': False,
+                        "error": 'existing_user'
+                        }
+                else:
+                    user.name = value
+                    self.session.commit()
+                    return {
+                        'status': True,
+                        }
+
+            case 'password':
+                # hash plaintext password
+                hashed = argon2.hash(value)
+                # generate the salt\
+                salt = secrets.token_urlsafe(16)
+                # replace args password
+                password = hashed + salt
+                user.password = password
+                self.session.commit()
+                return {
+                    'status': True,
+                    }
+            case 'email':
+                usermail_exists = (
+                    self.session.query(User).
+                    filter(User.email == value).
+                    first()
+                    )
+                if usermail_exists and usermail_exists.name == user.name:
+                    return {
+                        'status': False,
+                        "error": 'existing_user'
+                        }
+                else:
+                    user.email = value
+                    self.session.commit()
+                    return {
+                        'status': True,
+                        }
+            case 'role':
+                user.role = value
+                self.session.commit()
+                return {
+                    'status': True,
+                    }
+
+    def get_users(self):
+        return (self.session.query(User).order_by(User.name))

@@ -34,13 +34,13 @@ class DataController():
     #     self.session.add(new_user)
     #     return self.session.commit()
 
-    def get_users(self):
-        with Session(self.engine) as session:
-            stmt = select(User)
-            users = []
-            for user in session.scalars(stmt):
-                users.append(user)
-        return users
+    # def get_users(self):
+    #     with Session(self.engine) as session:
+    #         stmt = select(User)
+    #         users = []
+    #         for user in session.scalars(stmt):
+    #             users.append(user)
+    #     return users
 
     def get_user_by_name(self, name):
         with Session(self.engine) as session:

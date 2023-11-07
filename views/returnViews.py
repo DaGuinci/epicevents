@@ -11,14 +11,6 @@ class ReturnView:
         print(content)
         print('\n')
 
-    def welcome_logged(self, user):
-        msg = 'Bonjour, ' + user.name
-        content = msg.center(35, '*')
-        print('\n')
-        print(content)
-        print('\n')
-        tools.prompt_ok()
-
     def error_msg(self, error_type):
         match error_type:
             case 'bad_username':
@@ -27,6 +19,7 @@ class ReturnView:
                 print('\nLe mot de passe et le nom d\'utilisateur ' +
                       'ne correspondent pas.\n')
             case 'existing_user':
+                tools.clear_term()
                 print('\nCet utilisateur existe déjà.\n')
                 tools.prompt_ok()
             case _:
@@ -36,7 +29,30 @@ class ReturnView:
         tools.clear_term()
         match args['type']:
             case 'user_logged':
-                print('Bonjour, ' + args['user'].name)
+                msg = 'Bonjour, ' + args['user'].name
+                print(tools.format_title(msg))
             case 'new_user_created':
                 print('Le collaborateur ' + args['user'].name + ' a été créé.')
+            case 'user_updated':
+                print('Le collaborateur ' + args['user'].name +
+                      ' a bien été modifié.')
         tools.prompt_ok()
+
+    def user_card(self, user):
+        tools.clear_term()
+        print(tools.format_title('Fiche collaborateur - ' + user.name))
+        match user.role:
+            case 'MAN':
+                dept = 'Gestion'
+            case 'COM':
+                dept = 'Commercial'
+            case 'SUP':
+                dept = 'Support'
+
+        args = [
+            ['Nom:', user.name],
+            ['Email:', user.email],
+            ['Département:', dept],
+            # ['Nom:'], [user.name],
+        ]
+        tools.display_table(args)

@@ -2,6 +2,7 @@ from os import system, name
 
 from simple_term_menu import TerminalMenu
 
+from terminaltables import AsciiTable, SingleTable
 
 # define our clear function
 def clear_term():
@@ -28,3 +29,10 @@ def prompt_ok():
         )
 
     return terminal_menu.show()
+
+
+def display_table(args):
+    table = SingleTable(args)
+    table.inner_heading_row_border = False
+    table.inner_row_border = True
+    print(table.table)

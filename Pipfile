@@ -11,6 +11,7 @@ passlib = "*"
 argon2-cffi = "*"
 alembic = "*"
 simple-term-menu = "*"
+terminaltables = "*"
 
 [dev-packages]
 
