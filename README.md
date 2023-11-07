@@ -45,11 +45,11 @@ Openclassrooms study project - P12
 - [x] Setup MVC
 - [x] DAO
 - [ ] Secure SQL
-- [ ] Add unique constraint for user name/email
+- [x] Add unique constraint for user name/email
 
 #### 1.4. Etape 3: User account
 
-- [ ] Password managing (bcrypt, argon2)
+- [x] Password managing (bcrypt, argon2)
 - [ ] Permissions
 
 #### 1.5. Etape 4: Authentification/autorisation
@@ -58,7 +58,7 @@ Openclassrooms study project - P12
 
 #### 1.6. Etape 5: Data reading
 
-- [ ] Getters
+- [x] Getters
   
 #### 1.7. Etape 6: Data creating/updating
 
@@ -80,7 +80,7 @@ Openclassrooms study project - P12
 
 #### 1.10. Etape 9: Write documentation
 
-  - [ ] Set datatable creation script
+  - [x] Setup datatable creation script
 
 ### 2. Brief
 

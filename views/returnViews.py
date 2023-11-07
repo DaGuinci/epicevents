@@ -20,11 +20,18 @@ class ReturnView:
                       'ne correspondent pas.\n')
             case 'existing_user':
                 tools.clear_term()
+                print('Création/modification impossible:')
                 print('\nCet utilisateur existe déjà.\n')
                 tools.prompt_ok()
             case 'self_deleting':
                 tools.clear_term()
+                print('Suppression impossible:')
                 print('\nVous ne pouvez pas vous supprimer vous-même.\n')
+                tools.prompt_ok()
+            case 'existing_client':
+                tools.clear_term()
+                print('Création/modification impossible:')
+                print('\nCe client existe déjà.\n')
                 tools.prompt_ok()
             case _:
                 print('Une erreur est survenue.')
@@ -43,6 +50,8 @@ class ReturnView:
             case 'user_deleted':
                 print('Le collaborateur ' + args['user'] +
                       ' a bien été supprimé.')
+            case 'new_client_created':
+                print('Le client ' + args['client'].name + ' a été créé.')
         return tools.prompt_ok()
 
     def user_card(self, user):

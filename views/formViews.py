@@ -194,3 +194,51 @@ class FormView:
                 return True
             case 1:
                 return False
+
+    def sales_main_menu(self):
+        tools.clear_term()
+        title = 'Commercial: menu principal'
+        content = tools.format_title(title)
+        options = [
+            'Créer un nouveau client',
+            'Voir ou modifier vos clients',
+            'Voir ou modifier vos contrats',
+            'Voir les contrats non signés',
+            'Créer un nouvel événement',
+            'Quitter l\'application'
+        ]
+        terminal_menu = TerminalMenu(
+            options,
+            menu_highlight_style=('standout', 'bg_purple'),
+            clear_screen=True,
+            title=content,
+            quit_keys=()
+            )
+
+        return terminal_menu.show()
+
+    def get_client_creation_infos(self):
+        print(tools.format_title('Création d\'un collaborateur'))
+        infos = {}
+
+        infos['name'] = input('Nom:\n')
+        while len(infos['name']) == 0:
+            print('Ce champ est obligatoire.\n')
+            infos['name'] = input('Nom:\n')
+
+        infos['email'] = input('\nEmail:\n')
+        while len(infos['email']) == 0:
+            print('Ce champ est obligatoire.')
+            infos['email'] = input('\nEmail:\n')
+
+        infos['phone'] = input('\nNuméro de téléphone:\n')
+        while len(infos['phone']) == 0:
+            print('Ce champ est obligatoire.')
+            infos['phone'] = input('\nNuméro de téléphone:\n')
+
+        infos['company'] = input('\nSociété:\n')
+        while len(infos['company']) == 0:
+            print('Ce champ est obligatoire.')
+            infos['company'] = input('\nSociété:\n')
+
+        return infos

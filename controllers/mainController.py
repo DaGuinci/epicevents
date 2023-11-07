@@ -1,5 +1,6 @@
 from controllers.dbController import DataController
 from controllers.userController import UserController
+from controllers.clientController import ClientController
 
 from views import formViews, returnViews
 
@@ -9,6 +10,7 @@ class MainController():
     def __init__(self, db_credentials):
         self.data_controller = DataController(db_credentials)
         self.user_controller = UserController(self.data_controller)
+        self.client_controller = ClientController(self.data_controller)
         self.return_view = returnViews.ReturnView()
         self.forms_view = formViews.FormView()
         self.logged = None
@@ -24,12 +26,14 @@ class MainController():
             if try_login['status'] is True:
                 #log user
                 self.logged = try_login['user']
+                self.return_view.success_msg({
+                    'type': 'user_logged',
+                    'user': self.logged
+                    })
                 if self.logged.role == 'MAN':
-                    self.return_view.success_msg({
-                        'type': 'user_logged',
-                        'user': self.logged
-                        })
                     return self.main_manager()
+                if self.logged.role == 'COM':
+                    return self.main_sales()
             else:
                 self.return_view.error_msg(try_login['error'])
                 return self.log_user()
@@ -123,3 +127,24 @@ class MainController():
         else:
             self.pick_user()
 
+    def main_sales(self):
+        choice = self.forms_view.sales_main_menu()
+        match choice:
+            case 0:
+                args = self.forms_view.get_client_creation_infos()
+                args['epic_contact'] = self.logged.user_id
+                create_return = self.client_controller.create_client(args)
+                if create_return['status']:
+                    self.return_view.success_msg({
+                        'type': 'new_client_created',
+                        'client': create_return['client']
+                        })
+                    return self.main_manager()
+                else:
+                    self.return_view.error_msg(create_return['error'])
+                    return self.main_manager()
+            case 1:
+                # TODO proposer une demarche par dept/par recherche...
+                return self.pick_user()
+            case 4:
+                exit()
