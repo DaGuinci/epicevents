@@ -17,10 +17,12 @@ def clear_term():
 
 
 def format_title(title):
+    title = '   ' + title + '   '
     return '\n' + title.center(70, '*') + '\n'
 
 
 def prompt_ok():
+    print('\n')
     terminal_menu = TerminalMenu(
         ['Valider'],
         menu_highlight_style=('standout', 'bg_purple'),

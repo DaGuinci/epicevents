@@ -51,3 +51,69 @@ class ClientController():
                     'status': True,
                     'client': client
                     }
+
+    def get_user_clients(self, user):
+        clients = (
+            self.session.query(Client).
+            filter(Client.epic_contact == user.user_id).
+            all()
+            )
+        return clients
+
+    def update_client(self, client, key, value):
+        match key:
+            case 'name':
+                clientname_exists = (
+                    self.session.query(Client).
+                    filter(client.name == value).
+                    first()
+                    )
+                if (
+                        clientname_exists and
+                        clientname_exists.email == client.email
+                        ):
+                    return {
+                        'status': False,
+                        "error": 'existing_client'
+                        }
+                client.name = value
+                self.session.commit()
+                return {
+                    'status': True,
+                    }
+            case 'email':
+                clientmail_exists = (
+                    self.session.query(Client).
+                    filter(client.email == value).
+                    first()
+                    )
+                if clientmail_exists and clientmail_exists.name == client.name:
+                    return {
+                        'status': False,
+                        "error": 'existing_client'
+                        }
+                else:
+                    client.email = value
+                    self.session.commit()
+                    return {
+                        'status': True,
+                        }
+            case 'phone':
+                client.phone = value
+                self.session.commit()
+                return {
+                    'status': True,
+                    }
+            case 'company':
+                client.company = value
+                self.session.commit()
+                return {
+                    'status': True,
+                    }
+
+    def delete_client(self, client):
+        self.session.delete(client)
+        self.session.commit()
+        return {
+            'status': True,
+            }

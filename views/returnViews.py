@@ -38,10 +38,10 @@ class ReturnView:
 
     def success_msg(self, args):
         tools.clear_term()
+        print(tools.format_title('Opération effectuée'))
         match args['type']:
             case 'user_logged':
-                msg = 'Bonjour, ' + args['user'].name
-                print(tools.format_title(msg))
+                print('Bonjour, ' + args['user'].name)
             case 'new_user_created':
                 print('Le collaborateur ' + args['user'].name + ' a été créé.')
             case 'user_updated':
@@ -52,6 +52,12 @@ class ReturnView:
                       ' a bien été supprimé.')
             case 'new_client_created':
                 print('Le client ' + args['client'].name + ' a été créé.')
+            case 'client_updated':
+                print('Le client ' + args['client'].name +
+                      ' a bien été modifié.')
+            case 'client_deleted':
+                print('Le client ' + args['client'] +
+                      ' a bien été supprimé.')
         return tools.prompt_ok()
 
     def user_card(self, user):
@@ -70,5 +76,20 @@ class ReturnView:
             ['Email:', user.email],
             ['Département:', dept],
             # ['Nom:'], [user.name],
+        ]
+        tools.display_table(args)
+
+    def client_card(self, client):
+        tools.clear_term()
+        print(tools.format_title('Fiche client - ' + client.name))
+
+        args = [
+            ['Nom:', client.name],
+            ['Email:', client.email],
+            ['Téléphone:', client.phone],
+            ['Entreprise:', client.company],
+            ['Premier contact:', client.date_created],
+            ['Dernier contact / mise à jour:', client.date_updated],
+            ['Contact commercial:', client.epic_contact],
         ]
         tools.display_table(args)

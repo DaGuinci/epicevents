@@ -66,7 +66,7 @@ class MainController():
         for user in users:
             options.append(user.name)
         options.append('Revenir en arrière')
-        response = self.forms_view.user_choice(options)
+        response = self.forms_view.resource_picker(options, 'user')
         if response == len(options)-1:
             return self.main_manager()
         else:
@@ -128,6 +128,7 @@ class MainController():
             self.pick_user()
 
     def main_sales(self):
+        """Main menu for commercials."""
         choice = self.forms_view.sales_main_menu()
         match choice:
             case 0:
@@ -139,12 +140,76 @@ class MainController():
                         'type': 'new_client_created',
                         'client': create_return['client']
                         })
-                    return self.main_manager()
+                    return self.main_sales()
                 else:
                     self.return_view.error_msg(create_return['error'])
-                    return self.main_manager()
+                    return self.main_sales()
             case 1:
                 # TODO proposer une demarche par dept/par recherche...
-                return self.pick_user()
+                return self.pick_client()
             case 4:
                 exit()
+
+    def pick_client(self):
+        clients = self.client_controller.get_user_clients(self.logged)
+        # self.main_sales()
+        options = []
+        for client in clients:
+            options.append(client.name)
+        options.append('Revenir en arrière')
+        response = self.forms_view.resource_picker(options, 'client')
+        if response == len(options)-1:
+            return self.main_sales()
+        else:
+            client = clients[response]
+            return self.client_actions(client)
+
+    def client_actions(self, client):
+        self.return_view.client_card(client)
+        response = self.forms_view.client_actions_menu()
+        match response:
+            case 0:
+                return self.update_client_process(client)
+            case 1:
+                return self.delete_client_process(client)
+            case 2:
+                return self.pick_client()
+
+    def update_client_process(self, client):
+        """Modify a client"""
+        response = self.forms_view.modify_client_menu(client)
+        update_return = self.client_controller.update_client(
+            client,
+            response['key'],
+            response['value']
+            )
+        # if ok, success msg
+        if update_return['status']:
+            self.return_view.success_msg(
+                {
+                    'type': 'client_updated',
+                    'client': client
+                    }
+                )
+            return self.pick_client()
+        # if not, error msg
+        else:
+            self.return_view.error_msg(update_return['error'])
+            return self.pick_client()
+
+    def delete_client_process(self, client):
+        clientname = client.name
+        response = self.forms_view.confirm_client_delete(client)
+        if response:
+            # TODO manage the case of client having  contracts...
+            delete_return = self.client_controller.delete_client(client)
+            if delete_return:
+                self.return_view.success_msg(
+                    {
+                        'type': 'client_deleted',
+                        'client': clientname
+                        }
+                    )
+                self.pick_client()
+        else:
+            self.pick_client()
