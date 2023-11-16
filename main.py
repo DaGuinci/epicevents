@@ -10,8 +10,6 @@ f.close()
 db_credentials = config['db_config']
 
 # No user connected
-global _user
-_user = None
 
 main_controller = MainController(db_credentials)
 # main_controller.main_manager()

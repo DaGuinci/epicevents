@@ -2,7 +2,7 @@ from controllers.dbController import DataController
 from controllers.userController import UserController
 from controllers.clientController import ClientController
 
-from views import formViews, returnViews
+from views import formViews, returnViews, tools
 
 
 class MainController():
@@ -57,6 +57,9 @@ class MainController():
             case 1:
                 # TODO proposer une demarche par dept/par recherche...
                 return self.pick_user()
+            case 2:
+                # TODO proposer une demarche par dept/par recherche...
+                return self.pick_client()
             case 4:
                 exit()
 
@@ -133,7 +136,7 @@ class MainController():
         match choice:
             case 0:
                 args = self.forms_view.get_client_creation_infos()
-                args['epic_contact'] = self.logged.user_id
+                args['epic_contact'] = self.logged
                 create_return = self.client_controller.create_client(args)
                 if create_return['status']:
                     self.return_view.success_msg({
@@ -151,7 +154,7 @@ class MainController():
                 exit()
 
     def pick_client(self):
-        clients = self.client_controller.get_user_clients(self.logged)
+        clients = self.client_controller.get_clients()
         # self.main_sales()
         options = []
         for client in clients:
@@ -162,7 +165,14 @@ class MainController():
             return self.main_sales()
         else:
             client = clients[response]
-            return self.client_actions(client)
+            if self.logged.user_id == client.epic_contact:
+                return self.client_actions(client)
+            return self.read_client(client)
+
+    def read_client(self, client):
+        self.return_view.client_card(client)
+        tools.prompt_ok()
+        return self.pick_client()
 
     def client_actions(self, client):
         self.return_view.client_card(client)

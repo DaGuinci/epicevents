@@ -2,10 +2,13 @@ from sqlalchemy.engine import URL
 from sqlalchemy import create_engine, select, delete
 from sqlalchemy.orm import Session
 
-from models.userModel import User
-from models.clientModel import Client
-from models.contractModel import Contract
-from models.eventModel import Event
+from models.models import (
+    User,
+    Client,
+    Contract,
+    Event,
+    create_tables
+)
 
 
 class DataController():
@@ -21,6 +24,7 @@ class DataController():
         )
         self.engine = create_engine(url, echo=False)
         self.session = Session(self.engine)
+        create_tables(self.engine)
 
     # Users
     # def save_user(self, args):

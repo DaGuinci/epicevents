@@ -1,4 +1,4 @@
-from models.userModel import User
+from models.models import User
 from passlib.hash import argon2
 import secrets
 

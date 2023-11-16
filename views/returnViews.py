@@ -90,6 +90,6 @@ class ReturnView:
             ['Entreprise:', client.company],
             ['Premier contact:', client.date_created],
             ['Dernier contact / mise à jour:', client.date_updated],
-            ['Contact commercial:', client.epic_contact],
+            ['Contact commercial:', client.epic_contact.name],
         ]
         tools.display_table(args)

@@ -1,4 +1,5 @@
 from simple_term_menu import TerminalMenu
+from getpass import getpass
 
 from views import tools
 
@@ -9,7 +10,7 @@ class FormView:
         credentials = {}
         credentials['username'] = input('Entrez votre nom d\'utilisateur:\n')
         # print('\n')
-        credentials['password'] = input('\nEntrez votre mot de passe:\n')
+        credentials['password'] = getpass('\nEntrez votre mot de passe:\n')
         return credentials
 
     def manager_main_menu(self):
@@ -20,7 +21,7 @@ class FormView:
             'Inscrire un collaborateur',
             'Voir ou modifier les collaborateurs',
             'Voir les clients',
-            'Voir les contrats',
+            'Voir ou modifier les contrats',
             'Quitter l\'application'
         ]
         terminal_menu = TerminalMenu(

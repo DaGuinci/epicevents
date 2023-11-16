@@ -1,4 +1,4 @@
-from models.clientModel import Client
+from models.models import Client
 
 
 class ClientController():
@@ -52,10 +52,17 @@ class ClientController():
                     'client': client
                     }
 
-    def get_user_clients(self, user):
+    # def get_user_clients(self, user):
+    #     clients = (
+    #         self.session.query(Client).
+    #         filter(Client.epic_contact == user.user_id).
+    #         all()
+    #         )
+    #     return clients
+
+    def get_clients(self):
         clients = (
             self.session.query(Client).
-            filter(Client.epic_contact == user.user_id).
             all()
             )
         return clients
