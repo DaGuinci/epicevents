@@ -18,7 +18,6 @@ class FormView:
         title = 'Gestion: menu principal'
         content = tools.format_title(title)
         options = [
-            'Inscrire un collaborateur',
             'Voir ou modifier les collaborateurs',
             'Voir les clients',
             'Voir ou modifier les contrats',
@@ -35,6 +34,7 @@ class FormView:
         return terminal_menu.show()
 
     def get_user_creation_infos(self):
+        tools.clear_term()
         print(tools.format_title('Création d\'un collaborateur'))
         infos = {}
 
@@ -214,7 +214,6 @@ class FormView:
         title = 'Commercial: menu principal'
         content = tools.format_title(title)
         options = [
-            'Créer un nouveau client',
             'Voir ou modifier vos clients',
             'Voir ou modifier vos contrats',
             'Voir les contrats non signés',

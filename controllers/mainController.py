@@ -43,37 +43,39 @@ class MainController():
         choice = self.forms_view.manager_main_menu()
         match choice:
             case 0:
-                args = self.forms_view.get_user_creation_infos()
-                response = self.user_controller.create_user(args)
-                if response['status']:
-                    self.return_view.success_msg({
-                        'type': 'new_user_created',
-                        'user': response['user']
-                        })
-                    return self.main_manager()
-                else:
-                    self.return_view.error_msg(response['error'])
-                    return self.main_manager()
-            case 1:
                 # TODO proposer une demarche par dept/par recherche...
                 return self.pick_user()
-            case 2:
+            case 1:
                 # TODO proposer une demarche par dept/par recherche...
                 return self.pick_client()
+            case 2:
+                return self.pick_contract()
             case 4:
                 exit()
 
     def pick_user(self):
         users = self.user_controller.get_users()
-        options = []
+        options = ['Créer un nouveau collaborateur']
         for user in users:
             options.append(user.name)
         options.append('Revenir en arrière')
         response = self.forms_view.resource_picker(options, 'user')
-        if response == len(options)-1:
+        if response == 0:
+            args = self.forms_view.get_user_creation_infos()
+            response = self.user_controller.create_user(args)
+            if response['status']:
+                self.return_view.success_msg({
+                    'type': 'new_user_created',
+                    'user': response['user']
+                    })
+                return self.main_manager()
+            else:
+                self.return_view.error_msg(response['error'])
+                return self.main_manager()
+        elif response == len(options)-1:
             return self.main_manager()
         else:
-            user = users[response]
+            user = users[response-1]
             return self.user_actions(user)
 
     def user_actions(self, user):
@@ -135,24 +137,11 @@ class MainController():
         choice = self.forms_view.sales_main_menu()
         match choice:
             case 0:
-                args = self.forms_view.get_client_creation_infos()
-                args['epic_contact'] = self.logged
-                create_return = self.client_controller.create_client(args)
-                if create_return['status']:
-                    self.return_view.success_msg({
-                        'type': 'new_client_created',
-                        'client': create_return['client']
-                        })
-                    return self.main_sales()
-                else:
-                    self.return_view.error_msg(create_return['error'])
-                    return self.main_sales()
-            case 1:
                 # TODO proposer une demarche par dept/par recherche...
                 return self.pick_salesman_client()
-            case 5:
+            case 4:
                 return self.pick_client()
-            case 6:
+            case 5:
                 exit()
 
     def pick_client(self):
@@ -175,15 +164,28 @@ class MainController():
 
     def pick_salesman_client(self):
         clients = self.client_controller.get_salesman_clients(self.logged)
-        options = []
+        options = ['Créer un nouveau client']
         for client in clients:
             options.append(client.name)
         options.append('Revenir en arrière')
         response = self.forms_view.resource_picker(options, 'client')
-        if response == len(options)-1:
+        if response == 0:
+            args = self.forms_view.get_client_creation_infos()
+            args['epic_contact'] = self.logged
+            create_return = self.client_controller.create_client(args)
+            if create_return['status']:
+                self.return_view.success_msg({
+                    'type': 'new_client_created',
+                    'client': create_return['client']
+                    })
+                return self.main_sales()
+            else:
+                self.return_view.error_msg(create_return['error'])
+                return self.main_sales()
+        elif response == len(options)-1:
             return self.main_sales()
         else:
-            client = clients[response]
+            client = clients[response-1]
             return self.client_actions(client)
 
     def client_actions(self, client):
@@ -236,3 +238,6 @@ class MainController():
                 self.pick_client()
         else:
             self.pick_client()
+
+    def pick_contract(self):
+        pass
