@@ -1,6 +1,7 @@
 from controllers.dbController import DataController
 from controllers.userController import UserController
 from controllers.clientController import ClientController
+from controllers.contractController import ContractController
 
 from views import formViews, returnViews, tools
 
@@ -11,6 +12,7 @@ class MainController():
         self.data_controller = DataController(db_credentials)
         self.user_controller = UserController(self.data_controller)
         self.client_controller = ClientController(self.data_controller)
+        self.contract_controller = ContractController(self.data_controller)
         self.return_view = returnViews.ReturnView()
         self.forms_view = formViews.FormView()
         self.logged = None
@@ -117,7 +119,7 @@ class MainController():
                 'self_deleting'
             )
             return self.pick_user()
-        response = self.forms_view.confirm_user_delete(user)
+        response = self.forms_view.confirm_resource_delete(user, 'user')
         if response:
             # TODO manage the case of user having clients, contracts...
             delete_return = self.user_controller.delete_user(user)
@@ -224,7 +226,7 @@ class MainController():
 
     def delete_client_process(self, client):
         clientname = client.name
-        response = self.forms_view.confirm_client_delete(client)
+        response = self.forms_view.confirm_resource_delete(client, 'client')
         if response:
             # TODO manage the case of client having  contracts...
             delete_return = self.client_controller.delete_client(client)
@@ -240,4 +242,89 @@ class MainController():
             self.pick_client()
 
     def pick_contract(self):
-        pass
+        contracts = self.contract_controller.get_contracts()
+        options = ['Créer un nouveau contrat']
+        for contract in contracts:
+            options.append(contract.contract_id)
+        options.append('Revenir en arrière')
+        response = self.forms_view.resource_picker(options, 'client')
+        if response == 0:
+            return self.create_contract_process()
+        elif response == len(options)-1:
+            return self.main_manager()
+        else:
+            contract = contracts[response-1]
+            return self.contract_actions(contract)
+
+    def contract_actions(self, contract):
+        self.return_view.contract_card(contract)
+        # tools.prompt_ok()
+        response = self.forms_view.contract_actions_menu()
+        match response:
+            case 0:
+                return self.update_contract_process(contract)
+            case 1:
+                return self.delete_contract_process(contract)
+            case 2:
+                return self.pick_contract()
+        return self.pick_contract()
+
+    def create_contract_process(self):
+        clients = self.client_controller.get_clients()
+        options = []
+        for client in clients:
+            options.append(client.name)
+        new_contract_client = self.forms_view.resource_picker(
+            options, 'client_for_new_contract'
+            )
+        response = self.contract_controller.create_contract({
+            'client': clients[new_contract_client]
+        })
+        if response['status']:
+            self.return_view.success_msg({
+                'type': 'new_contract_created',
+                'contract': response['contract']
+                })
+            return self.main_manager()
+        else:
+            self.return_view.error_msg(response['error'])
+            return self.main_manager()
+
+    def update_contract_process(self, contract):
+        response = self.forms_view.modify_contract_menu(contract)
+        if response:
+            update_return = self.contract_controller.update_contract(
+                contract,
+                response['key'],
+                response['value']
+                )
+            if update_return['status']:
+                self.return_view.success_msg(
+                    {
+                        'type': 'contract_updated',
+                        'contract': contract
+                        }
+                    )
+                return self.pick_contract()
+            # if not, error msg
+            else:
+                self.return_view.error_msg(update_return['error'])
+                return self.pick_contract()
+        return self.pick_contract()
+
+    def delete_contract_process(self, contract):
+        contractid = contract.contract_id
+        response = self.forms_view.confirm_resource_delete(contract, 'contract')
+        if response:
+            # TODO manage the case of contract having  contracts...
+            delete_return = self.contract_controller.delete_contract(contract)
+            if delete_return:
+                self.return_view.success_msg(
+                    {
+                        'type': 'contract_deleted',
+                        'contract': contractid
+                        }
+                    )
+                self.pick_contract()
+        else:
+            self.pick_contract()

@@ -23,7 +23,7 @@ class Event(Base):
 
     event_id = Column(Integer, primary_key=True)
     contract = Column(
-        Integer, ForeignKey("contract.contract_id"), nullable=False
+        String, ForeignKey("contract.contract_id"), nullable=False
         )
     name = Column(String(50), nullable=False)
     epic_contact = Column(Integer, ForeignKey("user.user_id"))
@@ -40,15 +40,18 @@ class Event(Base):
 class Contract(Base):
     __tablename__ = 'contract'
 
-    contract_id = Column(Integer, primary_key=True)
-    client = Column(Integer, ForeignKey("client.client_id"), nullable=False)
-    total_amount = Column(Float(2), nullable=False)
+    contract_id = Column(String, primary_key=True)
+    client_id = Column(Integer, ForeignKey("client.client_id"), nullable=False)
+    total_amount = Column(Float(2))
     due_amount = Column(Float(2))
     signed = Column(Boolean, default=False)
     date_created = Column(Date, default=datetime.datetime.now)
 
-    events = relationship("Event", cascade="all, delete")
-
+    # events = relationship("Event", cascade="all, delete")
+    client = relationship(
+        "Client",
+        backref="contracts"
+        )
     def __repr__(self):
         return f'Contract {self.contract_id}'
 
@@ -65,7 +68,7 @@ class Client(Base):
     date_created = Column(Date, default=datetime.datetime.now)
     date_updated = Column(Date, onupdate=datetime.datetime.now)
 
-    contracts = relationship("Contract", cascade="all, delete")
+    # contracts = relationship("Contract", cascade="all, delete")
     epic_contact = relationship(
         "User",
         backref="clients"

@@ -77,15 +77,17 @@ class FormView:
                     print('\nDépartement:')
         return infos
 
-    def resource_picker(self, resources, type):
+    def resource_picker(self, resources, resource_type):
         """resources = list of str: resource's name
         type = str class name"""
         tools.clear_term()
-        match type:
+        match resource_type:
             case 'user':
                 title = 'Choisir un collaborateur'
             case 'client':
                 title = 'Choisir un client'
+            case 'client_for_new_contract':
+                title = 'Sélectionnez un client pour le contrat'
             case _:
                 title = 'Choisir une ressource'
         terminal_menu = TerminalMenu(
@@ -115,7 +117,7 @@ class FormView:
 
     def modify_user_menu(self, user):
         tools.clear_term()
-        title = 'Modification d\'un collaborateur - ' + user.name
+        title = 'Modification du collaborateur - ' + user.name
         print(tools.format_title(title))
         options = [
             'Modifier le nom',
@@ -183,31 +185,31 @@ class FormView:
             'value': new_value
         }
 
-    def confirm_user_delete(self, user):
-        tools.clear_term()
-        title = tools.format_title('Confirmation de suppression')
-        print(title)
-        title = (
-            'Souhaitez-vous réellement supprimer le collaborateur ' +
-            user.name +
-            ' ?\n'
-            )
-        options = [
-            'Confirmer',
-            'Revenir en arrière',
-        ]
-        term_menu = TerminalMenu(
-            options,
-            menu_highlight_style=('standout', 'bg_purple'),
-            clear_menu_on_exit=False,
-            quit_keys=(),
-            title=title
-            )
-        match term_menu.show():
-            case 0:
-                return True
-            case 1:
-                return False
+    # def confirm_user_delete(self, user):
+    #     tools.clear_term()
+    #     title = tools.format_title('Confirmation de suppression')
+    #     print(title)
+    #     title = (
+    #         'Souhaitez-vous réellement supprimer le collaborateur ' +
+    #         user.name +
+    #         ' ?\n'
+    #         )
+    #     options = [
+    #         'Confirmer',
+    #         'Revenir en arrière',
+    #     ]
+    #     term_menu = TerminalMenu(
+    #         options,
+    #         menu_highlight_style=('standout', 'bg_purple'),
+    #         clear_menu_on_exit=False,
+    #         quit_keys=(),
+    #         title=title
+    #         )
+    #     match term_menu.show():
+    #         case 0:
+    #             return True
+    #         case 1:
+    #             return False
 
     def sales_main_menu(self):
         tools.clear_term()
@@ -274,7 +276,7 @@ class FormView:
 
     def modify_client_menu(self, client):
         tools.clear_term()
-        title = 'Modification d\'un client - ' + client.name
+        title = 'Modification du client - ' + client.name
         print(tools.format_title(title))
         options = [
             'Modifier le nom',
@@ -322,15 +324,30 @@ class FormView:
             'value': new_value
         }
 
-    def confirm_client_delete(self, client):
+    def confirm_resource_delete(self, resource, resource_type):
         tools.clear_term()
         title = tools.format_title('Confirmation de suppression')
         print(title)
-        title = (
-            'Souhaitez-vous réellement supprimer le client ' +
-            client.name +
-            ' ?\n'
-            )
+        match resource_type:
+            case 'user':
+                title = (
+                    'Souhaitez-vous réellement supprimer le collaborateur ' +
+                    resource.name +
+                    ' ?\n'
+                    )
+            case 'client':
+                title = (
+                    'Souhaitez-vous réellement supprimer le client ' +
+                    resource.name +
+                    ' ?\n'
+                    )
+            case 'contract':
+                title = (
+                    'Souhaitez-vous réellement supprimer le contrat ' +
+                    resource.contract_id +
+                    ' ?\n'
+                    )
+
         options = [
             'Confirmer',
             'Revenir en arrière',
@@ -347,3 +364,86 @@ class FormView:
                 return True
             case 1:
                 return False
+
+    def contract_actions_menu(self):
+        options = [
+            'Modifier le contrat',
+            'Supprimer le contrat',
+            'Revenir en arrière'
+        ]
+        terminal_menu = TerminalMenu(
+            options,
+            menu_highlight_style=('standout', 'bg_purple'),
+            clear_menu_on_exit=False,
+            quit_keys=(),
+            title='\nQue souhaitez-vous faire ?'
+            )
+        return terminal_menu.show()
+
+    def modify_contract_menu(self, contract):
+        tools.clear_term()
+        title = 'Modification du contrat - ' + contract.contract_id
+        print(tools.format_title(title))
+        options = [
+            'Modifier le montant total',
+            'Modifier le montant dû',
+            'Modifier la signature',
+            'Revenir en arrière'
+        ]
+        terminal_menu = TerminalMenu(
+            options,
+            menu_highlight_style=('standout', 'bg_purple'),
+            clear_menu_on_exit=False,
+            quit_keys=(),
+            title='Que souhaitez-vous modifier ?'
+            )
+        new_value = None
+        match terminal_menu.show():
+            case 0:
+                key = 'total_amount'
+                while True:
+                    try:
+                        new_value = float(
+                            input('Nouveau montant total:\n')
+                            )
+                    except ValueError:
+                        print('Vous devez entrer un nombre décimal')
+                        continue
+                    else:
+                        break
+            case 1:
+                key = 'due_amount'
+                while True:
+                    try:
+                        new_value = float(
+                            input('Montant dû:\n')
+                            )
+                    except ValueError:
+                        print('Vous devez entrer un nombre décimal')
+                        continue
+                    else:
+                        break
+            case 2:
+                key = 'signed'
+                answers = [
+                    'Oui',
+                    'Non'
+                ]
+                confirm_menu = TerminalMenu(
+                    answers,
+                    menu_highlight_style=('standout', 'bg_purple'),
+                    clear_menu_on_exit=False,
+                    quit_keys=(),
+                    title='\nConsidérer ce contrat comme signé ?'
+                    )
+                match confirm_menu.show():
+                    case 0:
+                        new_value = True
+                    case 1:
+                        new_value = False
+            case 3:
+                return False
+        return {
+            'key': key,
+            'value': new_value
+        }

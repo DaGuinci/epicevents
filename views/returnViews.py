@@ -58,6 +58,14 @@ class ReturnView:
             case 'client_deleted':
                 print('Le client ' + args['client'] +
                       ' a bien été supprimé.')
+            case 'new_contract_created':
+                print('Le contract ' +
+                      args['contract'].contract_id +
+                      ' a été créé.')
+            case 'contract_updated':
+                print('Le contrat ' + args['contract'].contract_id +
+                      ' a bien été modifié.')
+
         return tools.prompt_ok()
 
     def user_card(self, user):
@@ -91,5 +99,29 @@ class ReturnView:
             ['Premier contact:', client.date_created],
             ['Dernier contact / mise à jour:', client.date_updated],
             ['Contact commercial:', client.epic_contact.name],
+        ]
+        tools.display_table(args)
+
+    def contract_card(self, contract):
+        tools.clear_term()
+        print(tools.format_title('Fiche contrat - ' + contract.contract_id))
+
+        args = [
+            ['Client:', contract.client.name],
+            ['Contrat signé:', 'Oui' if contract.signed else 'Non'],
+            [
+                'Coût total:',
+                str(contract.total_amount) + ' euros' if
+                contract.total_amount else
+                'Non fourni'
+            ],
+            [
+                'Montant dû:',
+                str(contract.due_amount) + ' euros' if
+                contract.due_amount else
+                'Non fourni'
+            ],
+            ['Création contrat:', contract.date_created],
+            ['Contact commercial:', contract.client.epic_contact.name],
         ]
         tools.display_table(args)
