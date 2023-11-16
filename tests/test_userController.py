@@ -1,14 +1,14 @@
 from tests.test_setup import TempDatabaseTest
 
-from controllers.dbController import DataController
+from controllers.mainController import MainController
 
-from models.userModel import User
+from models.models import User
 
 
 class UserControllerTest(TempDatabaseTest):
 
     def test_user_creation(self):
-        controller = DataController(self.credentials)
+        controller = MainController(self.credentials)
 
         """
         When creating a user

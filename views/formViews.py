@@ -219,6 +219,7 @@ class FormView:
             'Voir ou modifier vos contrats',
             'Voir les contrats non signés',
             'Créer un nouvel événement',
+            'Voir tous les clients',
             'Quitter l\'application'
         ]
         terminal_menu = TerminalMenu(
@@ -315,6 +316,8 @@ class FormView:
                 while len(new_value) == 0:
                     print('Ce champ est obligatoire.\n')
                     new_value = input('Modifier l\'entreprise:\n')
+            case 4:
+                return False
         return {
             'key': key,
             'value': new_value

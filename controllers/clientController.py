@@ -67,6 +67,14 @@ class ClientController():
             )
         return clients
 
+    def get_salesman_clients(self, user):
+        clients = (
+            self.session.query(Client).
+            filter(Client.epic_contact == user).
+            all()
+            )
+        return clients
+
     def update_client(self, client, key, value):
         match key:
             case 'name':

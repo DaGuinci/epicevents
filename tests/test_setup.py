@@ -5,11 +5,13 @@ from sqlalchemy import create_engine
 from unittest import TestCase
 from sqlalchemy.engine import URL
 
-from models.userModel import User
-from models.clientModel import Client
-from models.contractModel import Contract
-from models.eventModel import Event
-
+from models.models import (
+    Event,
+    Contract,
+    Client,
+    User
+)
+from models.models import create_tables
 
 class TempDatabaseTest(TestCase):
 
@@ -33,7 +35,7 @@ class TempDatabaseTest(TestCase):
         Session = sessionmaker()
 
         engine = create_engine(url)
-
+        create_tables(engine)
         self.connection = engine.connect()
 
         self.session = Session(

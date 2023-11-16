@@ -149,13 +149,14 @@ class MainController():
                     return self.main_sales()
             case 1:
                 # TODO proposer une demarche par dept/par recherche...
+                return self.pick_salesman_client()
+            case 5:
                 return self.pick_client()
-            case 4:
+            case 6:
                 exit()
 
     def pick_client(self):
         clients = self.client_controller.get_clients()
-        # self.main_sales()
         options = []
         for client in clients:
             options.append(client.name)
@@ -165,14 +166,25 @@ class MainController():
             return self.main_sales()
         else:
             client = clients[response]
-            if self.logged.user_id == client.epic_contact:
-                return self.client_actions(client)
             return self.read_client(client)
 
     def read_client(self, client):
         self.return_view.client_card(client)
         tools.prompt_ok()
         return self.pick_client()
+
+    def pick_salesman_client(self):
+        clients = self.client_controller.get_salesman_clients(self.logged)
+        options = []
+        for client in clients:
+            options.append(client.name)
+        options.append('Revenir en arrière')
+        response = self.forms_view.resource_picker(options, 'client')
+        if response == len(options)-1:
+            return self.main_sales()
+        else:
+            client = clients[response]
+            return self.client_actions(client)
 
     def client_actions(self, client):
         self.return_view.client_card(client)
@@ -188,24 +200,25 @@ class MainController():
     def update_client_process(self, client):
         """Modify a client"""
         response = self.forms_view.modify_client_menu(client)
-        update_return = self.client_controller.update_client(
-            client,
-            response['key'],
-            response['value']
-            )
-        # if ok, success msg
-        if update_return['status']:
-            self.return_view.success_msg(
-                {
-                    'type': 'client_updated',
-                    'client': client
-                    }
+        if response:
+            update_return = self.client_controller.update_client(
+                client,
+                response['key'],
+                response['value']
                 )
-            return self.pick_client()
-        # if not, error msg
-        else:
-            self.return_view.error_msg(update_return['error'])
-            return self.pick_client()
+            if update_return['status']:
+                self.return_view.success_msg(
+                    {
+                        'type': 'client_updated',
+                        'client': client
+                        }
+                    )
+                return self.pick_salesman_client()
+            # if not, error msg
+            else:
+                self.return_view.error_msg(update_return['error'])
+                return self.pick_salesman_client()
+        return self.pick_salesman_client()
 
     def delete_client_process(self, client):
         clientname = client.name
