@@ -88,6 +88,8 @@ class FormView:
                 title = 'Choisir un client'
             case 'client_for_new_contract':
                 title = 'Sélectionnez un client pour le contrat'
+            case 'contracts':
+                title = 'Sélectionner un contract'
             case _:
                 title = 'Choisir une ressource'
         terminal_menu = TerminalMenu(
@@ -365,12 +367,13 @@ class FormView:
             case 1:
                 return False
 
-    def contract_actions_menu(self):
+    def contract_actions_menu(self, role):
         options = [
             'Modifier le contrat',
-            'Supprimer le contrat',
             'Revenir en arrière'
         ]
+        if role == 'MAN':
+            options.insert(1, 'Supprimer le contrat')
         terminal_menu = TerminalMenu(
             options,
             menu_highlight_style=('standout', 'bg_purple'),

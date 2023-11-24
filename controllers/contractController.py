@@ -1,4 +1,4 @@
-from models.models import Contract
+from models.models import Contract, Client
 
 
 class ContractController():
@@ -27,7 +27,7 @@ class ContractController():
             all()
             )
         contract_id = (
-            args['client'].name +
+            args['client'].company +
             '-' +
             str(len(contracts)+1)
             )
@@ -55,13 +55,22 @@ class ContractController():
             )
         return contracts
 
-    # def get_client_contracts(self, user):
-    #     clients = (
-    #         self.session.query(Client).
-    #         filter(Client.epic_contact == user).
-    #         all()
-    #         )
-    #     return clients
+    def get_salesman_contracts(self, user):
+        contracts = []
+        clients = (
+            self.session.query(Client).
+            filter(Client.epic_contact == user).
+            all()
+        )
+        if clients:
+            for client in clients:
+                client_contracts = (
+                    self.session.query(Contract).
+                    filter(Contract.client == client).
+                    all()
+                )
+                contracts += client_contracts
+        return contracts
 
     def update_contract(self, contract, key, value):
         match key:

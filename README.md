@@ -208,6 +208,10 @@ Contract "1" -right- "1" Event
   * CRU contract
   * Acces events par filtre
   * Update event (associer un user support)
+  * read all users
+  * read all contracts
+  * read all clients
+  * read all events
 
 * Commercial
   * creer clients
@@ -215,10 +219,18 @@ Contract "1" -right- "1" Event
   * modifier contrats clients propres
   * acces contrat par filtre
   * créer evenement pour client contrat signé
+  * read all users
+  * read all contracts
+  * read all clients
+  * read all events
   
 * Support
   * acces events par filtre
   * update events propres
+  * read all users
+  * read all contracts
+  * read all clients
+  * read all events
 
 ### 3. Upgrade suggestions
 

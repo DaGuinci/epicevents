@@ -141,6 +141,8 @@ class MainController():
             case 0:
                 # TODO proposer une demarche par dept/par recherche...
                 return self.pick_salesman_client()
+            case 1:
+                return self.pick_salesman_contract()
             case 4:
                 return self.pick_client()
             case 5:
@@ -154,7 +156,11 @@ class MainController():
         options.append('Revenir en arrière')
         response = self.forms_view.resource_picker(options, 'client')
         if response == len(options)-1:
-            return self.main_sales()
+            match self.logged.role:
+                case 'MAN':
+                    return self.main_manager()
+                case 'COM':
+                    return self.main_sales()
         else:
             client = clients[response]
             return self.read_client(client)
@@ -199,7 +205,11 @@ class MainController():
             case 1:
                 return self.delete_client_process(client)
             case 2:
-                return self.pick_client()
+                match self.logged.role:
+                    case 'MAN':
+                        return self.pick_client()
+                    case 'COM':
+                        return self.pick_salesman_client()
 
     def update_client_process(self, client):
         """Modify a client"""
@@ -247,7 +257,7 @@ class MainController():
         for contract in contracts:
             options.append(contract.contract_id)
         options.append('Revenir en arrière')
-        response = self.forms_view.resource_picker(options, 'client')
+        response = self.forms_view.resource_picker(options, 'contracts')
         if response == 0:
             return self.create_contract_process()
         elif response == len(options)-1:
@@ -259,12 +269,16 @@ class MainController():
     def contract_actions(self, contract):
         self.return_view.contract_card(contract)
         # tools.prompt_ok()
-        response = self.forms_view.contract_actions_menu()
+        response = self.forms_view.contract_actions_menu(self.logged.role)
         match response:
             case 0:
                 return self.update_contract_process(contract)
             case 1:
-                return self.delete_contract_process(contract)
+                match self.logged.role:
+                    case 'MAN':
+                        return self.delete_contract_process(contract)
+                    case 'COM':
+                        return self.pick_salesman_contract()
             case 2:
                 return self.pick_contract()
         return self.pick_contract()
@@ -305,11 +319,19 @@ class MainController():
                         'contract': contract
                         }
                     )
-                return self.pick_contract()
+                match self.logged.role:
+                    case 'MAN':
+                        return self.pick_contract()
+                    case 'COM':
+                        return self.pick_salesman_contract()
             # if not, error msg
             else:
                 self.return_view.error_msg(update_return['error'])
-                return self.pick_contract()
+                match self.logged.role:
+                    case 'MAN':
+                        return self.pick_contract()
+                    case 'COM':
+                        return self.pick_salesman_contract()
         return self.pick_contract()
 
     def delete_contract_process(self, contract):
@@ -328,3 +350,18 @@ class MainController():
                 self.pick_contract()
         else:
             self.pick_contract()
+
+    def pick_salesman_contract(self):
+        contracts = self.contract_controller.get_salesman_contracts(
+            self.logged
+            )
+        options = []
+        for contract in contracts:
+            options.append(contract.contract_id)
+        options.append('Revenir en arrière')
+        response = self.forms_view.resource_picker(options, 'contracts')
+        if response == len(options)-1:
+            return self.main_sales()
+        else:
+            contract = contracts[response-1]
+            return self.contract_actions(contract)
