@@ -3,86 +3,17 @@ Openclassrooms study project - P12
 
 ## Table of contents <!-- omit in toc -->
 
-- [1. Todo](#1-todo)
-  - [1.1. Preproject](#11-preproject)
-  - [1.2. Etape 1: Env SQL/Python](#12-etape-1-env-sqlpython)
-  - [1.3. Etape 2: Models/dal](#13-etape-2-modelsdal)
-  - [1.4. Etape 3: User account](#14-etape-3-user-account)
-  - [1.5. Etape 4: Authentification/autorisation](#15-etape-4-authentificationautorisation)
-  - [1.6. Etape 5: Data reading](#16-etape-5-data-reading)
-  - [1.7. Etape 6: Data creating/updating](#17-etape-6-data-creatingupdating)
-  - [1.8. Etape 7: CLI Interface](#18-etape-7-cli-interface)
-  - [1.9. Etape 8: Logging](#19-etape-8-logging)
-  - [1.10. Etape 9: Write documentation](#110-etape-9-write-documentation)
-- [2. Brief](#2-brief)
-  - [2.1. Class diagram](#21-class-diagram)
-  - [2.2. DB model](#22-db-model)
-  - [2.3. Permissions](#23-permissions)
-- [3. Upgrade suggestions](#3-upgrade-suggestions)
-- [4. Documentation in progress](#4-documentation-in-progress)
+- [1. Brief](#1-brief)
+  - [1.1. Class diagram](#11-class-diagram)
+  - [1.2. DB model](#12-db-model)
+  - [1.3. Permissions](#13-permissions)
+- [2. Upgrade suggestions](#2-upgrade-suggestions)
+- [3. Documentation](#3-documentation)
   - [Installation](#installation)
   - [Configuration](#configuration)
   - [Execution](#execution)
 
-### 1. Todo
-
-#### 1.1. Preproject
-- [x] Brief
-- [x] Class diagram
-- [x] Cours CRM
-- [x] Cours sql
-
-#### 1.2. Etape 1: Env SQL/Python
-- [ ] Setup DB
-  - [x] Formation PostgreSQL
-  - [x] Formation SQLAlchemy
-  - [x] Install PGadmin
-  - [x] DB creation
-  - [x] SQLAlchemy
-
-#### 1.3. Etape 2: Models/dal
-
-- [x] Setup MVC
-- [x] DAO
-- [ ] Secure SQL
-- [x] Add unique constraint for user name/email
-
-#### 1.4. Etape 3: User account
-
-- [x] Password managing (bcrypt, argon2)
-- [ ] Permissions
-
-#### 1.5. Etape 4: Authentification/autorisation
-
-- [ ] JWT
-
-#### 1.6. Etape 5: Data reading
-
-- [x] Getters
-  
-#### 1.7. Etape 6: Data creating/updating
-
-- [ ] Code DAO
-- [ ] Validation by controlers
-- [ ] Security
-  - [ ] Injection SQL
-
-#### 1.8. Etape 7: CLI Interface
-
--[ ] Choose library: click, rich
-
-#### 1.9. Etape 8: Logging
-
-- [ ] Sentry pour exceptions et erreurs produites
-  - [ ] Caught exceptions
-  - [ ] user creation/upudate
-  - [ ] signing contract
-
-#### 1.10. Etape 9: Write documentation
-
-  - [x] Setup datatable creation script
-
-### 2. Brief
+### 1. Brief
 
 * Départements:
   * commercial
@@ -92,7 +23,7 @@ Openclassrooms study project - P12
   * gestion
     * Cree contrat/associe contrat-client
 
-#### 2.1. Class diagram
+#### 1.1. Class diagram
 
 <!--
 
@@ -194,11 +125,11 @@ Contract "1" -right- "1" Event
 ![Alt text](README.svg)
 <!--
 ' MyClass "1" -- "*" MyAssociatedObject -->
-#### 2.2. DB model
+#### 1.2. DB model
 
 ![Alt text](ERD.svg)
 
-#### 2.3. Permissions
+#### 1.3. Permissions
   
 * Tous
   * Acces lecture a toutes ressources
@@ -232,11 +163,11 @@ Contract "1" -right- "1" Event
   * read all clients
   * read all events
 
-### 3. Upgrade suggestions
+### 2. Upgrade suggestions
 
   - Add a companies table to retrieve clients from same company
 
-### 4. Documentation in progress
+### 3. Documentation
 
 #### Installation
 
@@ -281,17 +212,7 @@ Contract "1" -right- "1" Event
   ```bash
   git update-index --skip-worktree config.json
   ```
-  
-* To create tables it is possible to use:
-  
-  ```bash
-  python db_tables_setup.py
-  ```
 
-  *to use a test database, change db_create.py, line 116, with*
-  ```python
-  credentials = config['test_db_config']
-  ```
 
 #### Execution
 
