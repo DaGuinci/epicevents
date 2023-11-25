@@ -26,20 +26,20 @@ class ContractController():
             filter(Contract.client == args['client']).
             all()
             )
-        contract_id = (
+        contract_name = (
             args['client'].company +
             '-' +
             str(len(contracts)+1)
             )
         new_contract = Contract(
-            contract_id=contract_id,
+            contract_name=contract_name,
             client=args['client'],
         )
         self.session.add(new_contract)
         self.session.commit()
         contract = (
             self.session.query(Contract).
-            filter(Contract.contract_id == contract_id).
+            filter(Contract.contract_name == contract_name).
             first()
             )
         if contract:
@@ -70,6 +70,25 @@ class ContractController():
                     all()
                 )
                 contracts += client_contracts
+        return contracts
+
+    def get_salesman_signed_contracts(self, user):
+        contracts = []
+        clients = (
+            self.session.query(Client).
+            filter(Client.epic_contact == user).
+            all()
+        )
+        if clients:
+            for client in clients:
+                client_contracts = (
+                    self.session.query(Contract).
+                    filter(Contract.client == client).
+                    all()
+                )
+                if client_contracts:
+                    for client_contract in client_contracts:
+                        contracts.append((client_contract, client.name))
         return contracts
 
     def update_contract(self, contract, key, value):

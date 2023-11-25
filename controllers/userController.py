@@ -128,6 +128,13 @@ class UserController():
     def get_users(self):
         return (self.session.query(User).order_by(User.name))
 
+    def get_sopport_users(self):
+        return (
+            self.session.query(User).
+            filter(User.role == 'SUP').
+            all()
+            )
+
     def delete_user(self, user):
         self.session.delete(user)
         self.session.commit()

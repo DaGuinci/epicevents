@@ -90,6 +90,8 @@ class FormView:
                 title = 'Sélectionnez un client pour le contrat'
             case 'contracts':
                 title = 'Sélectionner un contract'
+            case 'contract_for_event':
+                title = 'Sélectionner un contrat (contrats signés)'
             case _:
                 title = 'Choisir une ressource'
         terminal_menu = TerminalMenu(
@@ -236,7 +238,7 @@ class FormView:
         return terminal_menu.show()
 
     def get_client_creation_infos(self):
-        print(tools.format_title('Création d\'un collaborateur'))
+        print(tools.format_title('Création d\'un client'))
         infos = {}
 
         infos['name'] = input('Nom:\n')
@@ -346,7 +348,7 @@ class FormView:
             case 'contract':
                 title = (
                     'Souhaitez-vous réellement supprimer le contrat ' +
-                    resource.contract_id +
+                    resource.contract_name +
                     ' ?\n'
                     )
 
@@ -385,7 +387,7 @@ class FormView:
 
     def modify_contract_menu(self, contract):
         tools.clear_term()
-        title = 'Modification du contrat - ' + contract.contract_id
+        title = 'Modification du contrat - ' + contract.contract_name
         print(tools.format_title(title))
         options = [
             'Modifier le montant total',
@@ -450,3 +452,40 @@ class FormView:
             'key': key,
             'value': new_value
         }
+
+    def get_event_creation_infos(self, support_users):
+        print(tools.format_title('Création d\'un évènemnt'))
+        infos = {}
+
+        infos['name'] = input('Nom:\n')
+        while len(infos['name']) == 0:
+            print('Ce champ est obligatoire.\n')
+            infos['name'] = input('Nom:\n')
+
+        print('\nContact chez Epic Events:')
+        options = []
+        for user in support_users:
+            options.append(user.name)
+        terminal_menu = TerminalMenu(
+            options,
+            menu_highlight_style=('standout', 'bg_purple'),
+            clear_menu_on_exit=False,
+            )
+        infos['epic_contact'] = support_users[terminal_menu.show()]
+        infos['date_start'] = input('\nDate de début:\n')
+        infos['date_end'] = input('\nDate de fin:\n')
+        infos['location'] = input('\nLieu de l\'évènement:\n')
+
+        while True:
+            try:
+                infos['attendees'] = float(
+                    input('\nNombre de participants attendu:\n')
+                    )
+            except ValueError:
+                print('Vous devez entrer un nombre décimal')
+                continue
+            else:
+                break
+        infos['notes'] = input('\nNotes:\n')
+
+        return infos

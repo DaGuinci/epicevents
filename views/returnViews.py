@@ -60,10 +60,10 @@ class ReturnView:
                       ' a bien été supprimé.')
             case 'new_contract_created':
                 print('Le contract ' +
-                      args['contract'].contract_id +
+                      args['contract'].contract_name +
                       ' a été créé.')
             case 'contract_updated':
-                print('Le contrat ' + args['contract'].contract_id +
+                print('Le contrat ' + args['contract'].contract_name +
                       ' a bien été modifié.')
 
         return tools.prompt_ok()
@@ -104,7 +104,7 @@ class ReturnView:
 
     def contract_card(self, contract):
         tools.clear_term()
-        print(tools.format_title('Fiche contrat - ' + contract.contract_id))
+        print(tools.format_title('Fiche contrat - ' + contract.contract_name))
 
         args = [
             ['Client:', contract.client.name],

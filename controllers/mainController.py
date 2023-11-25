@@ -2,6 +2,7 @@ from controllers.dbController import DataController
 from controllers.userController import UserController
 from controllers.clientController import ClientController
 from controllers.contractController import ContractController
+from controllers.eventController import EventController
 
 from views import formViews, returnViews, tools
 
@@ -13,6 +14,7 @@ class MainController():
         self.user_controller = UserController(self.data_controller)
         self.client_controller = ClientController(self.data_controller)
         self.contract_controller = ContractController(self.data_controller)
+        self.event_controller = EventController(self.data_controller)
         self.return_view = returnViews.ReturnView()
         self.forms_view = formViews.FormView()
         self.logged = None
@@ -143,6 +145,8 @@ class MainController():
                 return self.pick_salesman_client()
             case 1:
                 return self.pick_salesman_contract()
+            case 3:
+                return self.create_event_process()
             case 4:
                 return self.pick_client()
             case 5:
@@ -255,7 +259,7 @@ class MainController():
         contracts = self.contract_controller.get_contracts()
         options = ['Créer un nouveau contrat']
         for contract in contracts:
-            options.append(contract.contract_id)
+            options.append(contract.contract_name)
         options.append('Revenir en arrière')
         response = self.forms_view.resource_picker(options, 'contracts')
         if response == 0:
@@ -286,6 +290,7 @@ class MainController():
     def create_contract_process(self):
         clients = self.client_controller.get_clients()
         options = []
+        # TODO case no client
         for client in clients:
             options.append(client.name)
         new_contract_client = self.forms_view.resource_picker(
@@ -357,7 +362,7 @@ class MainController():
             )
         options = []
         for contract in contracts:
-            options.append(contract.contract_id)
+            options.append(contract.contract_name)
         options.append('Revenir en arrière')
         response = self.forms_view.resource_picker(options, 'contracts')
         if response == len(options)-1:
@@ -365,3 +370,38 @@ class MainController():
         else:
             contract = contracts[response-1]
             return self.contract_actions(contract)
+
+    def create_event_process(self):
+        # ask for target client
+        contracts = self.contract_controller.get_salesman_signed_contracts(
+            self.logged
+            )
+        options = []
+        if len(contracts) > 0:
+            for contract in contracts:
+                options.append(
+                    contract[0].contract_name +
+                    ' pour le client ' +
+                    contract[1]
+                    )
+            options.append('Revenir en arrière')
+            response = self.forms_view.resource_picker(
+                options,
+                'contract_for_event'
+                )
+            if response == len(options)-1:
+                return self.main_sales()
+            support_users = self.user_controller.get_sopport_users()
+            # TODO case no support users
+            args = self.forms_view.get_event_creation_infos(support_users)
+            args['contract'] = contracts[response][0]
+
+            create_return = self.event_controller.create_event(args)
+            if create_return['status']:
+                self.return_view.success_msg({
+                    'type': 'new_event_created',
+                    'event': create_return['event']
+                    })
+                return self.main_sales()
+        else:
+            self.return_view,error_msg('no_signed_contracts')
