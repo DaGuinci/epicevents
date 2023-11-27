@@ -33,6 +33,11 @@ class ReturnView:
                 print('Création/modification impossible:')
                 print('\nCe client existe déjà.\n')
                 tools.prompt_ok()
+            case 'existing_event':
+                tools.clear_term()
+                print('Création/modification impossible:')
+                print('\nUn événement existe déjà pour ce contrat.\n')
+                tools.prompt_ok()
             case _:
                 print('Une erreur est survenue.')
 
@@ -64,6 +69,9 @@ class ReturnView:
                       ' a été créé.')
             case 'contract_updated':
                 print('Le contrat ' + args['contract'].contract_name +
+                      ' a bien été modifié.')
+            case 'event_updated':
+                print('L\'événement ' + args['event'].name +
                       ' a bien été modifié.')
 
         return tools.prompt_ok()
@@ -123,5 +131,22 @@ class ReturnView:
             ],
             ['Création contrat:', contract.date_created],
             ['Contact commercial:', contract.client.epic_contact.name],
+        ]
+        tools.display_table(args)
+
+    def event_card(self, event):
+        tools.clear_term()
+        print(tools.format_title('Fiche événement - ' + event.name))
+
+        args = [
+            ['Nom:', event.name],
+            ['Contrat:', event.contract.contract_name],
+            ['Client:', event.contract.client.name],
+            ['Date de début:', event.date_start],
+            ['Date de fin:', event.date_end],
+            ['Contact  chez Epic:', event.support.name],
+            ['Lieu:', event.location],
+            ['Nombre attendu:', event.attendees],
+            ['Notes:', event.notes],
         ]
         tools.display_table(args)

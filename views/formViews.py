@@ -92,6 +92,8 @@ class FormView:
                 title = 'Sélectionner un contract'
             case 'contract_for_event':
                 title = 'Sélectionner un contrat (contrats signés)'
+            case 'event':
+                title = 'Sélectionner un événement'
             case _:
                 title = 'Choisir une ressource'
         terminal_menu = TerminalMenu(
@@ -489,3 +491,107 @@ class FormView:
         infos['notes'] = input('\nNotes:\n')
 
         return infos
+
+    def support_main_menu(self):
+        tools.clear_term()
+        title = 'Support: menu principal'
+        content = tools.format_title(title)
+        options = [
+            'Voir ou modifier vos événements',
+            # 'Voir ou modifier vos contrats',
+            'Quitter l\'application'
+        ]
+        terminal_menu = TerminalMenu(
+            options,
+            menu_highlight_style=('standout', 'bg_purple'),
+            clear_screen=True,
+            title=content,
+            quit_keys=()
+            )
+
+        return terminal_menu.show()
+
+    def event_actions_menu(self):
+        options = [
+            'Modifier l\'événement',
+            'Revenir en arrière'
+        ]
+        terminal_menu = TerminalMenu(
+            options,
+            menu_highlight_style=('standout', 'bg_purple'),
+            clear_menu_on_exit=False,
+            quit_keys=(),
+            title='\nQue souhaitez-vous faire ?'
+            )
+        return terminal_menu.show()
+
+    def modify_event_menu(self,  event):
+        tools.clear_term()
+        title = 'Modification de l\'événement - ' +  event.name
+        print(tools.format_title(title))
+        options = [
+            'Modifier le nom',
+            'Modifier la date de début',
+            'Modifier la date de fin',
+            'Modifier le lieu',
+            'Modifier le nombre attendu',
+            'Modifier les notes',
+            'Revenir en arrière'
+        ]
+        terminal_menu = TerminalMenu(
+            options,
+            menu_highlight_style=('standout', 'bg_purple'),
+            clear_menu_on_exit=False,
+            quit_keys=(),
+            title='Que souhaitez-vous modifier ?'
+            )
+        new_value = None
+        match terminal_menu.show():
+            case 0:
+                key = 'name'
+                new_value = input('Modifier le nom:\n')
+                while len(new_value) == 0:
+                    print('Ce champ est obligatoire.\n')
+                    new_value = input('Nouveau nom:\n')
+            case 1:
+                key = 'date_start'
+                new_value = input('Modifier la date de ðebut:\n')
+                while len(new_value) == 0:
+                    print('Ce champ est obligatoire.\n')
+                    new_value = input('Nouvelle date de début:\n')
+            case 2:
+                key = 'date_end'
+                new_value = input('Modifier la date de fin:\n')
+                while len(new_value) == 0:
+                    print('Ce champ est obligatoire.\n')
+                    new_value = input('Nouvelle date de fin:\n')
+            case 3:
+                key = 'location'
+                new_value = input('Modifier le lieu:\n')
+                while len(new_value) == 0:
+                    print('Ce champ est obligatoire.\n')
+                    new_value = input('Nouveau lieu:\n')
+            case 4:
+                key = 'attendees'
+                while True:
+                    try:
+                        new_value = int(
+                            input('Nouveau nombre attendu:\n')
+                            )
+                    except ValueError:
+                        print('Vous devez entrer un nombre décimal')
+                        continue
+                    else:
+                        break
+            case 5:
+                key = 'notes'
+                new_value = input('Modifier les notes:\n')
+                while len(new_value) == 0:
+                    print('Ce champ est obligatoire.\n')
+                    new_value = input('Nouvelles notes:\n')
+            case 6:
+                return False
+        return {
+            'key': key,
+            'value': new_value
+        }

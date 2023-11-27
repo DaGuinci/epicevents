@@ -1,4 +1,4 @@
-from models.models import Event, Contract
+from models.models import Event, Contract, User
 
 
 class EventController():
@@ -45,3 +45,63 @@ class EventController():
                 'status': True,
                 'event': event
                 }
+
+    def get_support_events(self, user):
+        events = (
+            self.session.query(Event).
+            filter(Event.epic_contact == user.user_id).
+            all()
+            )
+        for event in events:
+            contract = (
+                self.session.query(Contract).
+                filter(Contract.contract_id == event.contract_id).
+                first()
+                )
+            event.contract = contract
+            support = (
+                self.session.query(User).
+                filter(User.user_id == event.epic_contact).
+                first()
+            )
+            event.support = support
+        return events
+
+    def update_event(self, event, key, value):
+        match key:
+            case 'name':
+                event.name = value
+                self.session.commit()
+                return {
+                    'status': True,
+                    }
+            case 'date_start':
+                event.date_start = value
+                self.session.commit()
+                return {
+                    'status': True,
+                    }
+            case 'date_send':
+                event.date_send = value
+                self.session.commit()
+                return {
+                    'status': True,
+                    }
+            case 'location':
+                event.location = value
+                self.session.commit()
+                return {
+                    'status': True,
+                    }
+            case 'attendees':
+                event.attendees = value
+                self.session.commit()
+                return {
+                    'status': True,
+                    }
+            case 'notes':
+                event.notes = value
+                self.session.commit()
+                return {
+                    'status': True,
+                    }

@@ -38,6 +38,8 @@ class MainController():
                     return self.main_manager()
                 if self.logged.role == 'COM':
                     return self.main_sales()
+                if self.logged.role == 'SUP':
+                    return self.main_support()
             else:
                 self.return_view.error_msg(try_login['error'])
                 return self.log_user()
@@ -403,5 +405,61 @@ class MainController():
                     'event': create_return['event']
                     })
                 return self.main_sales()
+            self.return_view.error_msg(create_return['error'])
         else:
-            self.return_view,error_msg('no_signed_contracts')
+            self.return_view.error_msg('no_signed_contracts')
+        return self.main_sales()
+
+    def main_support(self):
+        """Main menu for supports."""
+        choice = self.forms_view.support_main_menu()
+        match choice:
+            case 0:
+                return self.pick_support_events()
+            case 1:
+                exit()
+
+    def pick_support_events(self):
+        events = self.event_controller.get_support_events(self.logged)
+        options = []
+        for event in events:
+            options.append(event.name)
+        options.append('Revenir en arrière')
+        response = self.forms_view.resource_picker(options, 'event')
+        if response == 0:
+            event = events[response]
+            return self.event_actions(event)
+        elif response == len(options)-1:
+            return self.main_support()
+
+    def event_actions(self, event):
+        self.return_view.event_card(event)
+        response = self.forms_view.event_actions_menu()
+        match response:
+            case 0:
+                return self.update_event_process(event)
+            case 1:
+                return self.pick_support_events()
+
+    def update_event_process(self, event):
+        """Modify a event"""
+        response = self.forms_view.modify_event_menu(event)
+        if response:
+            update_return = self.event_controller.update_event(
+                event,
+                response['key'],
+                response['value']
+                )
+            if update_return['status']:
+                self.return_view.success_msg(
+                    {
+                        'type': 'event_updated',
+                        'event': event
+                        }
+                    )
+                return self.pick_support_events()
+            # if not, error msg
+            else:
+                self.return_view.error_msg(update_return['error'])
+                return self.pick_support_events()
+        return self.pick_support_events()
