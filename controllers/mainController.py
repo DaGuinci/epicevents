@@ -426,7 +426,7 @@ class MainController():
             options.append(event.name)
         options.append('Revenir en arrière')
         response = self.forms_view.resource_picker(options, 'event')
-        if response == 0:
+        if response < len(options)-1:
             event = events[response]
             return self.event_actions(event)
         elif response == len(options)-1:

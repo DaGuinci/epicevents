@@ -88,7 +88,8 @@ class ContractController():
                 )
                 if client_contracts:
                     for client_contract in client_contracts:
-                        contracts.append((client_contract, client.name))
+                        if client_contract.signed:
+                            contracts.append((client_contract, client.name))
         return contracts
 
     def update_contract(self, contract, key, value):
