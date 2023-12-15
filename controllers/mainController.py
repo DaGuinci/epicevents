@@ -97,6 +97,8 @@ class MainController():
 
     def update_user_process(self, user):
         response = self.forms_view.modify_user_menu(user)
+        if response == 4:  # entrée revenir en arrière du menu
+            return self.user_actions(user)
         update_return = self.user_controller.update_user(
             user,
             response['key'],
@@ -125,7 +127,19 @@ class MainController():
             return self.pick_user()
         response = self.forms_view.confirm_resource_delete(user, 'user')
         if response:
-            # TODO manage the case of user having clients, contracts...
+            contracts = self.contract_controller.get_salesman_contracts(user)
+            for contract in contracts:
+                event = self.event_controller.get_contract_event(contract)
+                if event:
+                    self.event_controller.delete_event(event)
+                self.contract_controller.delete_contract(contract)
+            clients = self.client_controller.get_salesman_clients(user)
+            for client in clients:
+                self.client_controller.delete_client(client)
+            events = self.event_controller.get_support_events(user)
+            if events:
+                for event in events:
+                    event.epic_contact = None
             delete_return = self.user_controller.delete_user(user)
             if delete_return:
                 self.return_view.success_msg(

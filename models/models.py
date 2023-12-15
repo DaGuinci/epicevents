@@ -99,7 +99,7 @@ class Event(Base):
         Integer, ForeignKey("contract.contract_id"), nullable=False
         )
     name = Column(String(50), nullable=False)
-    epic_contact = Column(Integer, ForeignKey("user.user_id"))
+    epic_contact = Column(Integer, ForeignKey("user.user_id"), nullable=True)
     date_start = Column(String)
     date_end = Column(String)
     location = Column(String(50))

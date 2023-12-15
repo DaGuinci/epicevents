@@ -67,6 +67,16 @@ class EventController():
             event.support = support
         return events
 
+    def get_contract_event(self, contract):
+        event = (
+            self.session.query(Event).
+            filter(Event.contract_id == contract.contract_id).
+            first()
+            )
+        if event:
+            return event
+        return None
+
     def update_event(self, event, key, value):
         match key:
             case 'name':
@@ -105,3 +115,10 @@ class EventController():
                 return {
                     'status': True,
                     }
+
+    def delete_event(self, event):
+        self.session.delete(event)
+        self.session.commit()
+        return {
+            'status': True,
+            }

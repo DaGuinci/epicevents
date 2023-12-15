@@ -186,6 +186,8 @@ class FormView:
                         case _:
                             print('Ce champ est obligatoire.')
                             print('\nDépartement:')
+            case 4:
+                return 4
         return {
             'key': key,
             'value': new_value
